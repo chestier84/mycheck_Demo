@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Arquitectura Docker — Datafix Oracle</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1626;
+  --panel:#162035;
+  --panel-2:#1B2741;
+  --rule:rgba(180,200,230,0.12);
+  --rule-2:rgba(180,200,230,0.06);
+  --text:#E5EAF3;
+  --text-dim:#8A99B8;
+  --gold:#D4A73A;
+  --blue:#4F8FE4;
+  --teal:#3FBDA8;
+  --red:#E26F6F;
+  --green:#5BC796;
+  --orange:#E8A86B;
+  --font-sans:'IBM Plex Sans',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--font-sans);
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(ellipse at top, rgba(79,143,228,0.06), transparent 60%),
+    linear-gradient(rgba(180,200,230,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(180,200,230,0.025) 1px, transparent 1px);
+  background-size:auto, 32px 32px, 32px 32px;
+  min-height:100vh;
+  padding:48px 32px;
+}
+.container{max-width:1320px;margin:0 auto}
+
+/* HEADER */
+.eyebrow{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:0.22em;
+  color:var(--gold);text-transform:uppercase;
+}
+h1{
+  font-family:var(--font-sans);font-weight:300;
+  font-size:clamp(28px,3.6vw,46px);line-height:1.1;
+  margin-top:8px;
+}
+h1 strong{font-weight:600;color:var(--blue)}
+.lede{
+  font-size:15px;color:var(--text-dim);margin-top:14px;
+  max-width:64ch;line-height:1.55;
+}
+.rule{height:1px;background:var(--gold);width:48px;margin:20px 0 36px}
+
+/* HOST BAR */
+.host{
+  background:var(--panel);
+  border:1px solid var(--rule);
+  padding:18px 24px;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:24px;
+  border-radius:0;
+}
+.host .label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase}
+.host .url{font-family:var(--font-mono);font-size:13px;color:var(--gold)}
+.host .url strong{color:var(--text)}
+
+/* DIAGRAM AREA */
+.diagram{
+  position:relative;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:24px;
+  margin-bottom:48px;
+}
+.svc{
+  background:var(--panel);
+  border:1px solid var(--rule);
+  padding:24px;
+  position:relative;
+  display:flex;flex-direction:column;gap:14px;
+}
+.svc::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+.svc.frontend::before{background:var(--blue)}
+.svc.backend::before{background:var(--teal)}
+.svc.database::before{background:var(--gold)}
+
+.svc .badge{
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.18em;
+  color:var(--text-dim);text-transform:uppercase;
+  display:flex;justify-content:space-between;
+}
+.svc .badge .num{color:var(--gold)}
+.svc h3{
+  font-family:var(--font-sans);font-weight:500;
+  font-size:22px;line-height:1.1;
+}
+.svc .container-name{
+  font-family:var(--font-mono);font-size:12px;
+  color:var(--text-dim);
+  background:var(--panel-2);
+  padding:6px 12px;
+  display:inline-block;
+  margin-top:-4px;
+}
+.svc .image{
+  font-family:var(--font-mono);font-size:11.5px;
+  color:var(--text-dim);
+  border-top:1px dashed var(--rule);
+  padding-top:12px;line-height:1.6;
+}
+.svc .image span{color:var(--text)}
+.svc ul{list-style:none;padding:0;margin:8px 0;display:flex;flex-direction:column;gap:8px}
+.svc ul li{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-size:13px;color:var(--text);
+  padding:6px 0;
+  border-bottom:1px solid var(--rule-2);
+}
+.svc ul li:last-child{border-bottom:none}
+.svc ul li .k{color:var(--text-dim);font-family:var(--font-mono);font-size:11px;letter-spacing:0.05em}
+.svc ul li .v{font-family:var(--font-mono);font-size:12px;color:var(--text)}
+.svc ul li .v.port{color:var(--gold)}
+
+/* connectors */
+.diagram::after{
+  content:'';position:absolute;
+  top:50%;left:33.33%;right:33.33%;height:1px;
+  background:linear-gradient(90deg, transparent 0%, var(--rule) 12%, var(--rule) 88%, transparent 100%);
+  z-index:0;pointer-events:none;
+}
+.svc{z-index:1}
+
+.flow-arrow{
+  position:absolute;
+  top:50%;
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--gold);
+  background:var(--bg);
+  padding:4px 10px;
+  letter-spacing:0.12em;
+  z-index:2;
+  transform:translateY(-50%);
+}
+.flow-arrow.left{left:33.33%;transform:translate(-50%,-50%)}
+.flow-arrow.right{left:66.66%;transform:translate(-50%,-50%)}
+
+/* NETWORK INFO */
+.network-row{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;
+  margin-bottom:48px;
+}
+.net-card{
+  background:var(--panel-2);
+  border-left:2px solid var(--gold);
+  padding:18px 22px;
+}
+.net-card .label{
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.18em;
+  color:var(--text-dim);text-transform:uppercase;
+}
+.net-card .value{
+  font-family:var(--font-mono);font-size:13px;color:var(--text);
+  margin-top:8px;line-height:1.6;
+}
+.net-card .value strong{color:var(--gold)}
+
+/* FLOW STEPS */
+section.flow{
+  background:var(--panel);
+  padding:32px;
+  margin-bottom:32px;
+  border:1px solid var(--rule);
+}
+section.flow h2{
+  font-family:var(--font-sans);font-weight:400;
+  font-size:24px;margin-bottom:6px;
+}
+section.flow h2 strong{color:var(--blue);font-weight:600}
+section.flow .sub{color:var(--text-dim);font-size:14px;margin-bottom:24px}
+
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
+.step{
+  display:flex;flex-direction:column;gap:8px;
+  padding:0 16px;position:relative;
+}
+.step:not(:last-child)::after{
+  content:'→';
+  position:absolute;right:-8px;top:6px;
+  color:var(--gold);font-family:var(--font-mono);font-size:18px;
+  z-index:2;
+}
+.step .num{
+  font-family:var(--font-mono);font-size:11px;
+  letter-spacing:0.18em;color:var(--gold);
+}
+.step .what{
+  font-size:13px;line-height:1.5;color:var(--text);
+}
+.step .where{
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--text-dim);
+  border-top:1px dashed var(--rule);
+  padding-top:6px;margin-top:auto;
+}
+
+/* PORTS TABLE */
+section.ports{
+  background:var(--panel);
+  padding:32px;
+  border:1px solid var(--rule);
+  margin-bottom:32px;
+}
+section.ports h2{
+  font-family:var(--font-sans);font-weight:400;font-size:24px;margin-bottom:18px;
+}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+table th{
+  text-align:left;padding:12px 14px;
+  font-family:var(--font-mono);font-size:11px;
+  color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;
+  border-bottom:1px solid var(--gold);
+  font-weight:500;
+}
+table td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--rule-2);
+}
+table td.mono{font-family:var(--font-mono);color:var(--text)}
+table td.dim{color:var(--text-dim);font-size:12px}
+table td .pill{
+  display:inline-block;padding:3px 10px;
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.1em;
+}
+table td .pill.host{background:rgba(212,167,58,0.12);color:var(--gold)}
+table td .pill.internal{background:rgba(63,189,168,0.10);color:var(--teal)}
+
+/* CALLOUTS */
+.callouts{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+.callout{
+  background:var(--panel-2);padding:22px 26px;
+  border-left:3px solid var(--orange);
+}
+.callout .label{
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.18em;
+  color:var(--orange);text-transform:uppercase;margin-bottom:8px;
+}
+.callout p{font-size:13.5px;line-height:1.6;color:var(--text)}
+.callout code{
+  font-family:var(--font-mono);font-size:12px;
+  background:var(--bg);padding:1px 6px;color:var(--gold);
+}
+
+/* VOLUMES */
+section.vol{
+  background:var(--panel);padding:24px 32px;border:1px solid var(--rule);
+}
+section.vol h3{font-family:var(--font-sans);font-weight:500;font-size:18px;margin-bottom:14px}
+.vol-list{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.vol-item{font-family:var(--font-mono);font-size:12px;line-height:1.6;color:var(--text-dim)}
+.vol-item strong{color:var(--gold);display:block;margin-bottom:4px;font-weight:500}
+
+/* footer */
+footer{margin-top:48px;text-align:center;color:var(--text-dim);font-family:var(--font-mono);font-size:11px;letter-spacing:0.15em}
+
+/* responsive */
+@media (max-width:980px){
+  .diagram,.steps,.network-row,.vol-list,.callouts{grid-template-columns:1fr}
+  .diagram::after{display:none}
+  .flow-arrow{display:none}
+  .step:not(:last-child)::after{content:'↓';right:50%;top:auto;bottom:-12px;transform:translateX(50%)}
+}
+
+/* print */
+@media print{
+  body{background:white;color:black;padding:20px}
+  .svc,.net-card,section.flow,section.ports,section.vol,.callout{background:white;border:1px solid #ccc;color:black}
+  *{color:black !important}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<span class="eyebrow">Arquitectura Docker</span>
+<h1>Stack <strong>Datafix Oracle Automático</strong></h1>
+<p class="lede">Tres servicios contenedorizados conversando dentro de una red Docker interna. El navegador del cliente solo habla con un origen — todo lo demás vive aislado en la red privada.</p>
+<div class="rule"></div>
+
+<!-- HOST BAR -->
+<div class="host">
+  <span class="label">El usuario abre</span>
+  <span class="url"><strong>http://localhost:8080</strong> · un solo origen</span>
+</div>
+
+<!-- DIAGRAMA DE 3 SERVICIOS -->
+<div class="diagram">
+
+  <!-- FRONTEND -->
+  <div class="svc frontend">
+    <div class="badge"><span>Servicio 01</span><span class="num">01.</span></div>
+    <h3>Frontend + Reverse Proxy</h3>
+    <span class="container-name">datafix-frontend</span>
+    <div class="image">image: <span>nginx:alpine</span></div>
+    <ul>
+      <li><span class="k">expone al host</span><span class="v port">8080 → 80</span></li>
+      <li><span class="k">sirve</span><span class="v">datafix_oracle.html</span></li>
+      <li><span class="k">proxy /api/*</span><span class="v">→ backend:8000</span></li>
+      <li><span class="k">proxy /docs</span><span class="v">→ backend:8000</span></li>
+      <li><span class="k">depends_on</span><span class="v">backend</span></li>
+    </ul>
+  </div>
+
+  <!-- BACKEND -->
+  <div class="svc backend">
+    <div class="badge"><span>Servicio 02</span><span class="num">02.</span></div>
+    <h3>Backend FastAPI</h3>
+    <span class="container-name">datafix-backend</span>
+    <div class="image">build: <span>./backend (Python 3.11 + oracledb)</span></div>
+    <ul>
+      <li><span class="k">expone al host</span><span class="v port">8000 → 8000</span></li>
+      <li><span class="k">comando</span><span class="v">uvicorn main:app</span></li>
+      <li><span class="k">env</span><span class="v">ORACLE_HOST_OVERRIDE = oracle-xe</span></li>
+      <li><span class="k">endpoints</span><span class="v">/api/health · test-connection · dryrun</span></li>
+      <li><span class="k">depends_on</span><span class="v">oracle-xe (healthy)</span></li>
+    </ul>
+  </div>
+
+  <!-- DATABASE -->
+  <div class="svc database">
+    <div class="badge"><span>Servicio 03</span><span class="num">03.</span></div>
+    <h3>Oracle XE 21c</h3>
+    <span class="container-name">oracle-xe</span>
+    <div class="image">image: <span>container-registry.oracle.com/<br>database/express:21.3.0-xe</span></div>
+    <ul>
+      <li><span class="k">expone al host</span><span class="v port">1521 + 5500</span></li>
+      <li><span class="k">SID / PDB</span><span class="v">XEPDB1</span></li>
+      <li><span class="k">password SYS</span><span class="v">OraclePwd1</span></li>
+      <li><span class="k">healthcheck</span><span class="v">sqlplus cada 30s</span></li>
+      <li><span class="k">init</span><span class="v">./init/01_create_appuser.sql</span></li>
+    </ul>
+  </div>
+
+  <!-- arrows over the connector line -->
+  <span class="flow-arrow left">HTTP /api/*</span>
+  <span class="flow-arrow right">TCP 1521 (oracledb)</span>
+</div>
+
+<!-- NETWORK INFO -->
+<div class="network-row">
+  <div class="net-card">
+    <span class="label">Red interna</span>
+    <p class="value">Docker compose default network — todos los servicios se resuelven por <strong>nombre de servicio</strong> como DNS (`backend`, `oracle-xe`, `frontend`).</p>
+  </div>
+  <div class="net-card">
+    <span class="label">Por qué un solo origen</span>
+    <p class="value">El navegador habla con <strong>localhost:8080</strong> y nginx hace proxy de <code>/api/*</code> a <strong>backend:8000</strong>. Esto elimina <strong>CORS</strong> sin tocar headers.</p>
+  </div>
+  <div class="net-card">
+    <span class="label">Truco de host</span>
+    <p class="value"><code>ORACLE_HOST_OVERRIDE</code> traduce <strong>localhost</strong> que envía el navegador al hostname interno <strong>oracle-xe</strong>. Sin esto, el backend resolvería localhost a sí mismo.</p>
+  </div>
+</div>
+
+<!-- FLOW DE UNA REQUEST -->
+<section class="flow">
+  <h2>Vida de una request <strong>POST /api/dryrun</strong></h2>
+  <p class="sub">Qué pasa cuando el usuario aprieta el botón 🧪 DRY RUN en el editor SQL.</p>
+
+  <div class="steps">
+    <div class="step">
+      <span class="num">01.</span>
+      <p class="what">Browser envía <code style="font-family:var(--font-mono);font-size:11px">fetch('/api/dryrun', { method:'POST', body:JSON })</code> al puerto 8080.</p>
+      <span class="where">cliente → host</span>
+    </div>
+    <div class="step">
+      <span class="num">02.</span>
+      <p class="what">nginx en <strong>datafix-frontend</strong> recibe la request, hace match con <code>location /api/</code>.</p>
+      <span class="where">frontend:80</span>
+    </div>
+    <div class="step">
+      <span class="num">03.</span>
+      <p class="what">proxy_pass a <code>http://backend:8000</code>. La red interna resuelve "backend" por DNS.</p>
+      <span class="where">red Docker</span>
+    </div>
+    <div class="step">
+      <span class="num">04.</span>
+      <p class="what">FastAPI valida con Pydantic, abre conexión Oracle a <code>oracle-xe:1521/XEPDB1</code> con SAVEPOINT.</p>
+      <span class="where">backend:8000</span>
+    </div>
+    <div class="step">
+      <span class="num">05.</span>
+      <p class="what">Ejecuta sentencias, captura rowcount, hace <strong>ROLLBACK siempre</strong>, devuelve JSON con log y score.</p>
+      <span class="where">oracle-xe:1521 → cliente</span>
+    </div>
+  </div>
+</section>
+
+<!-- TABLA DE PUERTOS -->
+<section class="ports">
+  <h2>Puertos y direccionamiento</h2>
+  <table>
+    <thead>
+      <tr><th>Servicio</th><th>Puerto interno</th><th>Puerto host</th><th>Hostname interno</th><th>Para qué</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>frontend</td>
+        <td class="mono">80</td>
+        <td><span class="pill host">8080</span></td>
+        <td class="mono">frontend</td>
+        <td class="dim">Único origen del navegador. Sirve HTML + proxy /api/*</td>
+      </tr>
+      <tr>
+        <td>backend</td>
+        <td class="mono">8000</td>
+        <td><span class="pill host">8000</span></td>
+        <td class="mono">backend</td>
+        <td class="dim">FastAPI. Acceso directo solo para debug.</td>
+      </tr>
+      <tr>
+        <td>oracle-xe</td>
+        <td class="mono">1521</td>
+        <td><span class="pill host">1521</span></td>
+        <td class="mono">oracle-xe</td>
+        <td class="dim">Listener Oracle (TNS). Cliente DBA conecta por aquí.</td>
+      </tr>
+      <tr>
+        <td>oracle-xe (EM)</td>
+        <td class="mono">5500</td>
+        <td><span class="pill host">5500</span></td>
+        <td class="mono">oracle-xe</td>
+        <td class="dim">Enterprise Manager Express (https://localhost:5500/em).</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- VOLUMES -->
+<section class="vol">
+  <h3>Volúmenes y montajes</h3>
+  <div class="vol-list">
+    <div class="vol-item">
+      <strong>oracle-data</strong>
+      volumen named — persiste <code>/opt/oracle/oradata</code> entre reinicios. Sobrevive a <code>docker compose down</code>. Se borra solo con <code>down -v</code>.
+    </div>
+    <div class="vol-item">
+      <strong>./init</strong>
+      bind mount → <code>/opt/oracle/scripts/startup</code>. Ejecuta <code>01_create_appuser.sql</code> la primera vez que arranca Oracle.
+    </div>
+    <div class="vol-item">
+      <strong>../datafix_oracle.html + ./nginx.conf</strong>
+      bind mounts read-only en <code>nginx:alpine</code>. Editar el HTML local refresca al recargar.
+    </div>
+  </div>
+</section>
+
+<!-- CALLOUTS -->
+<div class="callouts" style="margin-top:32px">
+  <div class="callout">
+    <span class="label">Detalle a no romper</span>
+    <p>El campo de password en el JSON debe llamarse <code>password</code>, no <code>pass</code>. Pydantic <code>XEConfig</code> lo exige y devuelve <strong>HTTP 422</strong> si falta.</p>
+  </div>
+  <div class="callout">
+    <span class="label">Healthcheck importa</span>
+    <p>El backend tiene <code>depends_on: oracle-xe { condition: service_healthy }</code>. Por eso espera ~3-5 minutos hasta que Oracle pasa el sqlplus check antes de arrancar.</p>
+  </div>
+</div>
+
+<footer>docker compose up -d &nbsp;·&nbsp; 3 servicios &nbsp;·&nbsp; 1 red interna &nbsp;·&nbsp; 1 volumen persistente</footer>
+
+</div>
+</body>
+</html>

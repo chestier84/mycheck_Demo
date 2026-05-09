@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datafix Automatico · MetLife</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Editorial: deep navy + warm gold + cream */
+  --paper:#F4EEE2;
+  --paper-2:#EFE7D5;
+  --paper-3:#E6DBC2;
+  --ink:#1A2438;
+  --ink-2:#3A4762;
+  --ink-3:#6A7589;
+  --rule:rgba(26,36,56,0.14);
+  --rule-2:rgba(26,36,56,0.08);
+  --gold:#B8893E;
+  --gold-2:#9A6F2D;
+  --gold-tint:#F5E6C8;
+  --teal:#1F6B6B;
+  --teal-tint:#D6E8E5;
+  --sage:#5A7D5C;
+  --sage-tint:#D9E5DA;
+  --rust:#A23A2C;
+  --rust-tint:#F1D9D5;
+  --ink-bg:#0F1828;
+  --code-bg:#101725;
+  --font-serif:'Instrument Serif', Georgia, serif;
+  --font-sans:'Manrope', -apple-system, sans-serif;
+  --font-mono:'JetBrains Mono', 'SF Mono', Consolas, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:var(--font-sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
+body{
+  scroll-snap-type:y mandatory;
+  overflow-y:scroll;
+  height:100vh;
+  background:radial-gradient(ellipse at top right, #F8F2E5 0%, var(--paper) 60%);
+}
+section.slide{
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+  height:100dvh;
+  width:100%;
+  padding:5vh 7vw;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+section.slide.dark{background:var(--ink);color:var(--paper)}
+section.slide.gold{background:var(--gold-tint);color:var(--ink)}
+
+/* slide number + brand chrome */
+.brand{
+  position:absolute;top:3vh;left:7vw;right:7vw;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;
+  color:var(--ink-3);text-transform:uppercase;
+}
+.dark .brand{color:rgba(244,238,226,0.55)}
+.brand .mark{display:flex;gap:8px;align-items:center}
+.brand .mark svg{width:14px;height:14px}
+.pn{font-family:var(--font-mono);font-size:11px;color:var(--ink-3);letter-spacing:0.1em}
+.dark .pn{color:rgba(244,238,226,0.55)}
+
+/* TYPOGRAPHY */
+h1.display{font-family:var(--font-serif);font-weight:400;font-size:clamp(58px,9vw,140px);line-height:0.95;letter-spacing:-0.01em}
+h2.display{font-family:var(--font-serif);font-weight:400;font-size:clamp(42px,5.6vw,86px);line-height:1.0;letter-spacing:-0.005em}
+h3.display{font-family:var(--font-serif);font-weight:400;font-size:clamp(28px,3.4vw,52px);line-height:1.05}
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold-2);font-weight:500}
+.dark .eyebrow{color:var(--gold)}
+.lede{font-family:var(--font-serif);font-style:italic;font-size:clamp(18px,1.8vw,28px);line-height:1.4;color:var(--ink-2);max-width:48ch}
+.dark .lede{color:rgba(244,238,226,0.78)}
+.body{font-size:clamp(13px,1.1vw,16px);line-height:1.55;color:var(--ink-2);max-width:62ch}
+.dark .body{color:rgba(244,238,226,0.7)}
+.tag{font-family:var(--font-mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase}
+
+/* gold rule */
+.rule{height:1px;background:var(--gold);width:48px;margin:12px 0}
+.rule.long{width:100%;background:var(--rule)}
+
+/* layouts */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:6vw;align-items:center;flex:1}
+.left-heavy{display:grid;grid-template-columns:0.55fr 0.45fr;gap:5vw;flex:1;align-items:end}
+.right-heavy{display:grid;grid-template-columns:0.4fr 0.6fr;gap:5vw;flex:1;align-items:center}
+.stack{display:flex;flex-direction:column;gap:24px}
+.center{flex:1;display:flex;flex-direction:column;justify-content:center}
+
+/* SLIDE 01 — Title */
+.s-title{padding:8vh 7vw}
+.s-title .meta{font-family:var(--font-mono);font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold)}
+.s-title h1.display{margin-top:auto;color:var(--paper)}
+.s-title .sub{font-family:var(--font-serif);font-style:italic;font-size:clamp(20px,2vw,32px);color:var(--gold);margin-top:24px}
+.s-title .footer-line{display:flex;justify-content:space-between;align-items:end;margin-top:auto;padding-top:6vh}
+.s-title .footer-line span{font-family:var(--font-mono);font-size:11px;letter-spacing:0.2em;color:rgba(244,238,226,0.55);text-transform:uppercase}
+
+/* monogram for title */
+.monogram{
+  position:absolute;top:6vh;right:7vw;
+  width:120px;height:120px;
+  border:1px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-serif);font-size:64px;color:var(--gold);
+  font-style:italic;
+}
+.monogram::after{
+  content:'';position:absolute;inset:6px;border:1px solid rgba(184,137,62,0.3);
+}
+
+/* SECTION DIVIDER */
+.divider .num{font-family:var(--font-serif);font-size:clamp(180px,22vw,340px);line-height:0.8;color:var(--paper-3);font-weight:400;font-style:italic;position:absolute;left:5vw;top:50%;transform:translateY(-50%);user-select:none}
+.divider.gold .num{color:rgba(184,137,62,0.25)}
+.divider .text-block{position:relative;z-index:2;align-self:center;margin-left:30vw;max-width:50ch}
+.divider .eyebrow{margin-bottom:12px;display:block}
+
+/* PAIN CARDS */
+.pain-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:48px}
+.pain-card{
+  background:var(--paper-2);
+  padding:32px 28px;
+  border-top:2px solid var(--rust);
+  display:flex;flex-direction:column;gap:14px;
+}
+.pain-card .num{font-family:var(--font-serif);font-style:italic;font-size:64px;line-height:1;color:var(--rust);font-weight:400}
+.pain-card h3{font-family:var(--font-serif);font-size:24px;line-height:1.1;font-weight:400}
+.pain-card p{font-size:14px;line-height:1.55;color:var(--ink-2)}
+
+/* BEFORE / AFTER PROCESS */
+.process-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:32px;flex:1;align-items:start}
+.process-col h4{font-family:var(--font-serif);font-size:32px;font-weight:400;line-height:1.1}
+.process-col .total{
+  margin-top:20px;padding:16px 20px;font-family:var(--font-mono);font-size:13px;
+  letter-spacing:0.05em;display:flex;justify-content:space-between;
+}
+.process-col.before .total{background:var(--rust-tint);color:var(--rust)}
+.process-col.after .total{background:var(--sage-tint);color:var(--sage)}
+.process-col ol{list-style:none;margin-top:24px;padding:0}
+.process-col li{
+  padding:14px 0;border-top:1px solid var(--rule-2);
+  display:grid;grid-template-columns:32px 1fr auto;gap:16px;align-items:baseline;
+  font-size:14px;
+}
+.process-col li:last-child{border-bottom:1px solid var(--rule-2)}
+.process-col li .step{font-family:var(--font-mono);font-size:11px;color:var(--gold-2);letter-spacing:0.15em}
+.process-col li .label{color:var(--ink)}
+.process-col li .t{font-family:var(--font-mono);font-size:12px;color:var(--ink-3)}
+.process-col.after li .t{color:var(--sage);font-weight:600}
+
+/* TABLE */
+table.compare{width:100%;border-collapse:collapse;margin-top:24px;font-size:14px}
+table.compare thead th{
+  background:var(--ink);color:var(--gold);padding:14px 16px;text-align:left;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:0.15em;font-weight:500;
+  text-transform:uppercase;
+}
+table.compare tbody td{padding:14px 16px;border-bottom:1px solid var(--rule-2);font-family:var(--font-sans)}
+table.compare tbody tr:nth-child(even){background:var(--paper-2)}
+table.compare tbody td:first-child{font-weight:500;color:var(--ink)}
+table.compare tbody td:nth-child(2),table.compare tbody td:nth-child(3){font-family:var(--font-mono);color:var(--ink-2)}
+table.compare tbody td:last-child{color:var(--gold-2);font-weight:600;font-family:var(--font-mono);text-align:right}
+table.compare tfoot td{background:var(--gold);color:var(--ink);padding:18px 16px;font-weight:600;font-family:var(--font-mono);font-size:13px;letter-spacing:0.05em}
+
+/* CAPACITY GRID */
+.caps{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:32px;flex:1;align-content:center}
+.cap{display:grid;grid-template-columns:80px 1fr;gap:20px;padding:20px 0;border-top:1px solid var(--rule-2)}
+.cap:first-child,.cap:nth-child(2){padding-top:0;border-top:none}
+.cap .n{font-family:var(--font-serif);font-style:italic;font-size:64px;line-height:0.9;color:var(--gold);font-weight:400}
+.cap h4{font-family:var(--font-serif);font-size:26px;font-weight:400;line-height:1.1;margin-bottom:8px}
+.cap p{font-size:13.5px;line-height:1.5;color:var(--ink-2)}
+
+/* CODE / TERMINAL */
+.terminal{
+  background:var(--code-bg);
+  border-radius:0;
+  padding:20px 24px;
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  line-height:1.7;
+  color:#D6DCE7;
+  flex:1;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  position:relative;
+}
+.terminal-header{
+  font-size:10.5px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:#7A88A8;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  padding-bottom:10px;margin-bottom:14px;
+  display:flex;justify-content:space-between;
+}
+.terminal-header .filename{color:#9FAEC9}
+.terminal .ln{color:#4F5A75;display:inline-block;width:24px;text-align:right;padding-right:14px;user-select:none}
+.kw{color:#7DB6FF}.str{color:#E2C77B}.com{color:#5C6E8A;font-style:italic}.fn{color:#B987F8}.err{color:#F47373}.ok{color:#5BC796}.warn{color:#FFC56B}
+.term-line{display:block;white-space:pre}
+
+/* findings card */
+.findings-card{
+  background:var(--paper-2);padding:24px 28px;border-left:3px solid var(--gold);
+  display:flex;flex-direction:column;gap:14px;
+}
+.findings-card .label{font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-3)}
+.findings-card .value{font-family:var(--font-serif);font-size:22px;line-height:1.2}
+.findings-card .code-snip{
+  background:var(--ink-bg);color:#F47373;font-family:var(--font-mono);font-size:13px;
+  padding:14px 16px;letter-spacing:0.02em;
+}
+.findings-card .impact{font-family:var(--font-serif);font-size:32px;color:var(--rust);font-style:italic;line-height:1}
+
+/* RULES TABLE */
+table.rules{width:100%;border-collapse:collapse;font-size:13px}
+table.rules thead th{padding:12px 14px;background:var(--ink);color:var(--gold);font-family:var(--font-mono);font-size:10.5px;letter-spacing:0.15em;font-weight:500;text-transform:uppercase;text-align:left}
+table.rules tbody td{padding:11px 14px;border-bottom:1px solid var(--rule-2);font-family:var(--font-sans)}
+table.rules tbody tr:nth-child(even){background:var(--paper-2)}
+.sev{display:inline-block;font-family:var(--font-mono);font-size:10px;letter-spacing:0.15em;padding:3px 10px;font-weight:600}
+.sev.crit{background:var(--rust-tint);color:var(--rust)}
+.sev.alto{background:var(--gold-tint);color:var(--gold-2)}
+.sev.medio{background:var(--rule-2);color:var(--ink-3)}
+
+/* SCORE GAUGE */
+.gauge-block{display:grid;grid-template-columns:auto 1fr;gap:48px;align-items:center;flex:1}
+.gauge{
+  width:280px;height:280px;border-radius:50%;
+  background:conic-gradient(var(--gold) 0deg 259deg, var(--paper-3) 259deg 360deg);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+}
+.gauge::after{
+  content:'';position:absolute;inset:18px;background:var(--paper);border-radius:50%;
+}
+.gauge .val{position:relative;text-align:center;z-index:2}
+.gauge .num{font-family:var(--font-serif);font-size:96px;line-height:1;font-weight:400;color:var(--ink)}
+.gauge .lbl{font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;color:var(--ink-3);text-transform:uppercase;margin-top:6px}
+.findings-list{display:flex;flex-direction:column;gap:10px}
+.finding-row{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:center;padding:14px 18px}
+.finding-row.medio{background:var(--paper-2)}
+.finding-row.alto{background:var(--gold-tint)}
+.finding-row.crit{background:var(--sage-tint)}
+.finding-row .l{font-family:var(--font-serif);font-size:18px}
+.finding-row .s{font-family:var(--font-mono);font-size:13px;color:var(--ink-3)}
+.finding-row .v{font-family:var(--font-serif);font-size:28px;font-weight:400}
+.finding-row.medio .v{color:var(--ink-3)}
+.finding-row.alto .v{color:var(--gold-2)}
+.finding-row.crit .v{color:var(--sage)}
+
+/* KPI DASHBOARD */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:32px;flex:1;align-content:center}
+.kpi{padding:28px 0;border-top:1px solid var(--gold)}
+.kpi .big{font-family:var(--font-serif);font-size:clamp(72px,7vw,108px);line-height:0.95;font-weight:400;font-style:italic}
+.kpi .lab{font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-3);margin-top:8px}
+.kpi .desc{font-size:13px;color:var(--ink-2);margin-top:8px;line-height:1.5}
+
+/* QUOTE */
+.quote-slide{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;text-align:left}
+.quote-slide blockquote{font-family:var(--font-serif);font-size:clamp(48px,5.6vw,86px);line-height:1.05;font-weight:400;max-width:24ch;color:var(--paper)}
+.quote-slide blockquote::before{content:'\201C';font-size:1em;color:var(--gold);margin-right:0.05em}
+.quote-slide cite{font-family:var(--font-mono);font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-top:32px;font-style:normal}
+
+/* TIMELINE */
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:48px;flex:1;align-content:flex-start;position:relative}
+.timeline::before{
+  content:'';position:absolute;top:32px;left:5%;right:5%;height:1px;background:var(--gold);
+}
+.phase{padding:0 12px;display:flex;flex-direction:column;gap:10px;position:relative}
+.phase .dot{
+  width:18px;height:18px;border-radius:50%;background:var(--gold);
+  margin-top:24px;margin-bottom:32px;position:relative;z-index:2;
+  border:4px solid var(--paper);
+}
+.phase .week{font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;color:var(--gold-2);text-transform:uppercase}
+.phase h4{font-family:var(--font-serif);font-size:30px;font-weight:400;line-height:1.05}
+.phase p{font-size:13px;line-height:1.55;color:var(--ink-2)}
+
+/* USE CASES */
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px;flex:1}
+.case{padding:24px 28px;background:var(--paper-2);border-left:2px solid var(--teal)}
+.case h4{font-family:var(--font-serif);font-size:24px;font-weight:400;margin-bottom:8px}
+.case p{font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+.case .tag{color:var(--teal);margin-bottom:10px;display:block}
+
+/* CLOSING */
+.closing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:auto;margin-bottom:32px}
+.step{padding:24px;background:rgba(244,238,226,0.04);border-top:1px solid var(--gold)}
+.step .n{font-family:var(--font-serif);font-style:italic;color:var(--gold);font-size:48px;line-height:1}
+.step h4{font-family:var(--font-serif);font-size:22px;font-weight:400;margin:8px 0;color:var(--paper)}
+.step p{font-size:13px;color:rgba(244,238,226,0.65);line-height:1.5}
+.contact{font-family:var(--font-mono);font-size:13px;letter-spacing:0.1em;color:var(--gold);text-align:center}
+
+/* Navigation dots */
+.nav-dots{
+  position:fixed;right:24px;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:10px;z-index:100;
+}
+.nav-dots a{
+  width:7px;height:7px;border-radius:50%;background:rgba(26,36,56,0.25);
+  display:block;transition:all 0.2s;
+}
+.nav-dots a.active{background:var(--gold);transform:scale(1.5)}
+.nav-dots a:hover{background:var(--gold-2)}
+
+/* keyboard hint */
+.kbhint{
+  position:fixed;bottom:18px;left:24px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:0.18em;color:var(--ink-3);
+  text-transform:uppercase;opacity:0.6;
+}
+
+/* print */
+@media print{
+  body{scroll-snap-type:none;height:auto;background:white}
+  section.slide{height:100vh;page-break-after:always;break-after:page}
+  .nav-dots,.kbhint{display:none}
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+  body{scroll-behavior:auto}
+}
+
+/* dark theme adjustments */
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#1A2438;
+    --paper-2:#212C42;
+    --paper-3:#2A3650;
+    --ink:#F4EEE2;
+    --ink-2:#C8CCD6;
+    --ink-3:#8E96A8;
+    --rule:rgba(244,238,226,0.16);
+    --rule-2:rgba(244,238,226,0.08);
+    --gold:#D9AC56;
+    --gold-2:#C8983E;
+    --gold-tint:#3A2F18;
+    --rust-tint:#3A2222;
+    --sage-tint:#1F2E20;
+    --teal-tint:#162E2E;
+  }
+  body{background:radial-gradient(ellipse at top right, #232E48 0%, var(--paper) 60%)}
+  section.slide.dark{background:#0E1623}
+  section.slide.gold{background:var(--gold-tint)}
+  table.compare tfoot td{color:var(--ink-bg)}
+}
+</style>
+</head>
+<body>
+
+<!-- 01: TITLE -->
+<section class="slide dark s-title" id="s1">
+  <div class="brand">
+    <span class="mark">
+      <svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="#B8893E" stroke-width="1"/><circle cx="7" cy="7" r="2" fill="#B8893E"/></svg>
+      Datafix Automatico
+    </span>
+    <span>Mayo 2026</span>
+  </div>
+  <div class="monogram">M</div>
+
+  <div style="margin-top:auto">
+    <span class="meta">Una propuesta para</span>
+    <h1 class="display">MetLife.</h1>
+    <p class="sub">Validar, auditar y simular scripts Oracle<br>antes de tocar producción.</p>
+  </div>
+
+  <div class="footer-line">
+    <span>Datafix · MyCheck</span>
+    <span>16 / 01</span>
+  </div>
+</section>
+
+<!-- 02: SECTION 01 — El Reto -->
+<section class="slide divider" id="s2">
+  <div class="brand">
+    <span>Sección 01</span>
+    <span class="pn">02 / 16</span>
+  </div>
+  <div class="num">01</div>
+  <div class="text-block">
+    <span class="eyebrow">Capítulo Uno</span>
+    <h2 class="display" style="margin-top:8px">El reto.</h2>
+    <div class="rule"></div>
+    <p class="lede">Cada datafix Oracle es un riesgo de minutos en producción —<br>y de horas perdidas del DBA antes de llegar ahí.</p>
+  </div>
+</section>
+
+<!-- 03: PAIN POINTS -->
+<section class="slide" id="s3">
+  <div class="brand">
+    <span>Contexto MetLife</span>
+    <span class="pn">03 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">El estado actual</span>
+    <h2 class="display" style="margin-top:12px;max-width:18ch">Hoy validar un datafix depende del DBA de turno.</h2>
+  </div>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <span class="num">i.</span>
+      <h3>Volumen creciente</h3>
+      <p>Decenas de scripts/mes entre Pólizas, Comisiones y Reservas. La cola del DBA crece más rápido que su capacidad.</p>
+    </div>
+    <div class="pain-card">
+      <span class="num">ii.</span>
+      <h3>Validación manual</h3>
+      <p>Sintaxis, reglas Oracle y simulación dependen de la experiencia del revisor — y de su disponibilidad.</p>
+    </div>
+    <div class="pain-card">
+      <span class="num">iii.</span>
+      <h3>Costo del error</h3>
+      <p>Un UPDATE sin WHERE en pólizas se convierte en incidente regulatorio y exposición ante el regulador.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04: BEFORE / AFTER -->
+<section class="slide" id="s4">
+  <div class="brand">
+    <span>Proceso · Antes vs Después</span>
+    <span class="pn">04 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">El cambio operacional</span>
+    <h2 class="display" style="margin-top:12px;max-width:22ch">De la cola del DBA al chequeo automático.</h2>
+  </div>
+
+  <div class="process-grid">
+    <div class="process-col before">
+      <h4>Hoy</h4>
+      <ol>
+        <li><span class="step">01</span><span class="label">Solicitud y armado</span><span class="t">2 – 4 h</span></li>
+        <li><span class="step">02</span><span class="label">Chequeo de sintaxis</span><span class="t">1 – 2 h</span></li>
+        <li><span class="step">03</span><span class="label">Auditoría reglas Oracle</span><span class="t">1 – 3 h</span></li>
+        <li><span class="step">04</span><span class="label">Simulación / DRY RUN</span><span class="t">2 – 6 h</span></li>
+        <li><span class="step">05</span><span class="label">Revisión DBA</span><span class="t">4 – 12 h</span></li>
+        <li><span class="step">06</span><span class="label">Ejecución / rollback</span><span class="t">4 – 12 h</span></li>
+      </ol>
+      <div class="total"><span>Total ciclo</span><span>14 – 40 horas</span></div>
+    </div>
+
+    <div class="process-col after">
+      <h4>Con MyCheck</h4>
+      <ol>
+        <li><span class="step">01</span><span class="label">Solicitud + auto-chequeo</span><span class="t">30 min</span></li>
+        <li><span class="step">02</span><span class="label">Chequeo de sintaxis</span><span class="t">&lt; 1 min</span></li>
+        <li><span class="step">03</span><span class="label">Auditoría reglas Oracle</span><span class="t">&lt; 1 min</span></li>
+        <li><span class="step">04</span><span class="label">DRY RUN automático</span><span class="t">2 – 5 min</span></li>
+        <li><span class="step">05</span><span class="label">Revisión DBA con reporte</span><span class="t">1 – 2 h</span></li>
+        <li><span class="step">06</span><span class="label">Ejecución / rollback</span><span class="t">1 – 3 h</span></li>
+      </ol>
+      <div class="total"><span>Total ciclo</span><span>3.5 – 7.5 horas</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05: COMPARATIVE TABLE -->
+<section class="slide" id="s5">
+  <div class="brand">
+    <span>Comparativo etapa por etapa</span>
+    <span class="pn">05 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">El ahorro en una sola lámina</span>
+    <h2 class="display" style="margin-top:12px">Etapa por etapa.</h2>
+    <p class="body" style="margin-top:16px">Tiempos reales por script estándar — UPDATE / DELETE masivos en tablas core de la operación de seguros.</p>
+  </div>
+
+  <table class="compare">
+    <thead>
+      <tr><th>Etapa del proceso</th><th>Tiempo HOY</th><th>Con MyCheck</th><th>Ahorro</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1. Solicitud y armado del paquete</td><td>2 – 4 h</td><td>30 min</td><td>−75%</td></tr>
+      <tr><td>2. Chequeo de sintaxis</td><td>1 – 2 h</td><td>&lt; 1 min</td><td>−99%</td></tr>
+      <tr><td>3. Auditoría de reglas Oracle</td><td>1 – 3 h</td><td>&lt; 1 min</td><td>−99%</td></tr>
+      <tr><td>4. Simulación / DRY RUN</td><td>2 – 6 h</td><td>2 – 5 min</td><td>−95%</td></tr>
+      <tr><td>5. Revisión y aprobación DBA</td><td>4 – 12 h</td><td>1 – 2 h</td><td>−80%</td></tr>
+      <tr><td>6. Ejecución y rollback</td><td>4 – 12 h</td><td>1 – 3 h</td><td>−70%</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td>TOTAL CICLO</td><td>14 – 40 h</td><td>3.5 – 7.5 h</td><td>−75% promedio</td></tr>
+    </tfoot>
+  </table>
+</section>
+
+<!-- 06: SECTION 02 -->
+<section class="slide divider gold" id="s6">
+  <div class="brand">
+    <span>Sección 02</span>
+    <span class="pn">06 / 16</span>
+  </div>
+  <div class="num">02</div>
+  <div class="text-block">
+    <span class="eyebrow">Capítulo Dos</span>
+    <h2 class="display" style="margin-top:8px">La herramienta.</h2>
+    <div class="rule" style="background:var(--gold-2)"></div>
+    <p class="lede">MyCheck reemplaza el "checklist mental" del DBA<br>por reglas codificadas y ejecutables.</p>
+  </div>
+</section>
+
+<!-- 07: FOUR CAPABILITIES -->
+<section class="slide" id="s7">
+  <div class="brand">
+    <span>MyCheck en 4 capacidades</span>
+    <span class="pn">07 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">Una sola web</span>
+    <h2 class="display" style="margin-top:12px">Cuatro capacidades esenciales.</h2>
+  </div>
+
+  <div class="caps">
+    <div class="cap">
+      <span class="n">i.</span>
+      <div>
+        <h4>Validador de sintaxis SQL/PLSQL</h4>
+        <p>Detecta errores antes de pasar al DBA. Resaltado de línea, sugerencias de corrección, soporte a paquetes y bloques anónimos. Validación en menos de un segundo.</p>
+      </div>
+    </div>
+    <div class="cap">
+      <span class="n">ii.</span>
+      <div>
+        <h4>Auditor de reglas Oracle</h4>
+        <p>25+ reglas críticas que codifican la experiencia del DBA senior: UPDATE/DELETE sin WHERE, TRUNCATE, DROP, GRANT, locks de tabla. Tres niveles de severidad.</p>
+      </div>
+    </div>
+    <div class="cap">
+      <span class="n">iii.</span>
+      <div>
+        <h4>DRY RUN estilo Liquibase</h4>
+        <p>Ejecuta el script en sesión real con SAVEPOINT y ROLLBACK automático. Reporta filas afectadas y tiempo, sin tocar la base productiva.</p>
+      </div>
+    </div>
+    <div class="cap">
+      <span class="n">iv.</span>
+      <div>
+        <h4>Reporte de Score (max 100)</h4>
+        <p>Puntaje del script: 100 − 25·CRITICO − 10·ALTO − 3·MEDIO. Exportable a PDF para anexar al ticket. Auto-aprobación con score ≥ 90.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08: CODE — VALIDADOR -->
+<section class="slide" id="s8">
+  <div class="brand">
+    <span>Vista I · Validador de sintaxis</span>
+    <span class="pn">08 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">Vista I</span>
+    <h2 class="display" style="margin-top:12px">Errores detectados al instante.</h2>
+  </div>
+
+  <div class="split" style="margin-top:32px;align-items:stretch">
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="filename">script_polizas.sql</span>
+        <span>PLSQL · Parser v21c</span>
+      </div>
+<span class="term-line"><span class="ln">1</span><span class="com">-- Datafix POLIZAS · ticket DBA-7421</span></span>
+<span class="term-line"><span class="ln">2</span><span class="kw">UPDATE</span> polizas <span class="kw">SET</span> estado = <span class="str">'INACTIVA'</span></span>
+<span class="term-line"><span class="ln">3</span>  <span class="kw">WHERE</span> last_pago &lt; <span class="fn">SYSDATE</span> - <span class="str">365</span>;</span>
+<span class="term-line"><span class="ln">4</span> </span>
+<span class="term-line"><span class="ln">5</span><span class="err">-- ↳ error de coma</span></span>
+<span class="term-line"><span class="ln">6</span><span class="kw">INSERT INTO</span> log_audit (fecha<span class="err"> usuario,</span> accion)</span>
+<span class="term-line"><span class="ln">7</span><span class="kw">VALUES</span> (<span class="fn">SYSDATE</span>, <span class="str">'app'</span>, <span class="str">'datafix'</span>);</span>
+<span class="term-line"><span class="ln">8</span> </span>
+<span class="term-line"><span class="ln">9</span><span class="kw">COMMIT</span>;</span>
+    </div>
+
+    <div class="findings-card">
+      <div>
+        <span class="label">Diagnóstico · 0.42 s</span>
+      </div>
+      <div style="border-top:1px solid var(--rust);padding-top:14px">
+        <span class="label" style="color:var(--rust)">Error de sintaxis</span>
+        <p class="value" style="color:var(--rust)">Línea 6 · falta coma</p>
+      </div>
+      <div style="border-top:1px solid var(--sage);padding-top:14px">
+        <span class="label" style="color:var(--sage)">Sintaxis OK</span>
+        <p class="value" style="color:var(--sage)">8 sentencias · Parser v21c</p>
+      </div>
+      <div>
+        <span class="label">Sugerencia automática</span>
+        <div class="code-snip" style="color:var(--sage);background:#0F1828;margin-top:8px">INSERT INTO log_audit (fecha, usuario, accion)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 09: TABLE — REGLAS ORACLE -->
+<section class="slide" id="s9">
+  <div class="brand">
+    <span>Vista II · Auditor de reglas Oracle</span>
+    <span class="pn">09 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">Vista II</span>
+    <h2 class="display" style="margin-top:12px">El checklist del DBA, codificado.</h2>
+  </div>
+
+  <div class="split" style="margin-top:32px;align-items:start">
+    <table class="rules">
+      <thead>
+        <tr><th>Regla</th><th>Severidad</th><th>Acción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>UPDATE sin WHERE</td><td><span class="sev crit">Crítico</span></td><td>Bloquear</td></tr>
+        <tr><td>DELETE sin WHERE</td><td><span class="sev crit">Crítico</span></td><td>Bloquear</td></tr>
+        <tr><td>TRUNCATE TABLE</td><td><span class="sev crit">Crítico</span></td><td>Bloquear</td></tr>
+        <tr><td>DROP / ALTER en core</td><td><span class="sev crit">Crítico</span></td><td>Bloquear</td></tr>
+        <tr><td>GRANT a usuario directo</td><td><span class="sev alto">Alto</span></td><td>Alertar</td></tr>
+        <tr><td>Sin COMMIT explícito</td><td><span class="sev alto">Alto</span></td><td>Alertar</td></tr>
+        <tr><td>Lock &gt; 100k filas</td><td><span class="sev alto">Alto</span></td><td>Alertar</td></tr>
+        <tr><td>Sin SAVEPOINT</td><td><span class="sev medio">Medio</span></td><td>Sugerir</td></tr>
+        <tr><td>Tipos de dato implícitos</td><td><span class="sev medio">Medio</span></td><td>Sugerir</td></tr>
+      </tbody>
+    </table>
+
+    <div class="findings-card">
+      <span class="label" style="color:var(--rust)">Hallazgo crítico</span>
+      <p class="value">UPDATE sin cláusula WHERE</p>
+      <div>
+        <span class="label">Línea / archivo</span>
+        <p style="font-family:var(--font-mono);font-size:14px;margin-top:4px">script_polizas.sql · línea 14</p>
+      </div>
+      <div class="code-snip">UPDATE polizas SET activa=0;</div>
+      <div>
+        <span class="label">Impacto estimado</span>
+        <p class="impact">1.847.392 pólizas afectadas</p>
+      </div>
+      <div style="background:var(--gold);color:var(--ink);padding:12px 16px;font-family:var(--font-mono);font-size:12px;letter-spacing:0.15em;text-align:center;font-weight:600">BLOQUEADO · SCORE −25</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10: CODE — DRY RUN -->
+<section class="slide" id="s10">
+  <div class="brand">
+    <span>Vista III · DRY RUN motor Liquibase</span>
+    <span class="pn">10 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">Vista III</span>
+    <h2 class="display" style="margin-top:12px">Simular sin tocar producción.</h2>
+  </div>
+
+  <div class="split" style="margin-top:32px;align-items:stretch">
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="filename">▸ oracle-xe / pdb1 · DRY RUN console</span>
+        <span>SAVEPOINT + ROLLBACK</span>
+      </div>
+<span class="term-line">[10:42:01] Conectando a Oracle XE 21c · pdb1 ...</span>
+<span class="term-line"><span class="ok">[10:42:01] OK · Sesión DRY_RUN_42 abierta</span></span>
+<span class="term-line">[10:42:02] SAVEPOINT pre_datafix creado</span>
+<span class="term-line">[10:42:02] Ejecutando script_polizas.sql ...</span>
+<span class="term-line"> </span>
+<span class="term-line">  <span class="warn">▸ UPDATE polizas SET ...</span></span>
+<span class="term-line">    <span class="err">1,847,392 filas afectadas</span></span>
+<span class="term-line">  <span class="warn">▸ INSERT INTO log_audit ...</span></span>
+<span class="term-line">    <span class="ok">1 fila afectada</span></span>
+<span class="term-line">  <span class="warn">▸ COMMIT ...</span></span>
+<span class="term-line"> </span>
+<span class="term-line"><span class="ok">[10:42:08] ROLLBACK TO pre_datafix · base intacta</span></span>
+<span class="term-line">[10:42:08] Tiempo total: 5.71 s</span>
+<span class="term-line"><span class="ok">[10:42:08] Resultado: SIMULACIÓN OK</span></span>
+    </div>
+
+    <div class="findings-card">
+      <span class="label">Resumen DRY RUN</span>
+      <div style="display:grid;grid-template-columns:1fr;gap:8px">
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--rule-2)"><span class="label" style="font-size:11px">Filas afectadas</span><span style="font-family:var(--font-serif);font-size:24px">1.847.393</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--rule-2)"><span class="label" style="font-size:11px">Sentencias</span><span style="font-family:var(--font-serif);font-size:24px">8</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--rule-2)"><span class="label" style="font-size:11px">Errores</span><span style="font-family:var(--font-serif);font-size:24px">0</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--rule-2)"><span class="label" style="font-size:11px">Warnings</span><span style="font-family:var(--font-serif);font-size:24px">2</span></div>
+        <div style="display:flex;justify-content:space-between;padding:10px 0"><span class="label" style="font-size:11px">Tiempo</span><span style="font-family:var(--font-serif);font-size:24px">5.71 s</span></div>
+      </div>
+      <div style="background:var(--sage);color:var(--paper);padding:12px 16px;font-family:var(--font-mono);font-size:12px;letter-spacing:0.15em;text-align:center;font-weight:600">LISTO PARA PRODUCCIÓN</div>
+    </div>
+  </div>
+</section>
+
+<!-- 11: SCORE -->
+<section class="slide" id="s11">
+  <div class="brand">
+    <span>Vista IV · Reporte de Score</span>
+    <span class="pn">11 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">Vista IV</span>
+    <h2 class="display" style="margin-top:12px">Un solo número por script.</h2>
+  </div>
+
+  <div class="gauge-block">
+    <div>
+      <div class="gauge"><div class="val"><div class="num">72</div><div class="lbl">Score / 100</div></div></div>
+      <div style="background:var(--gold);color:var(--ink);padding:12px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;text-align:center;margin-top:18px;width:280px;font-weight:600">APROBADO CON OBSERVACIONES</div>
+    </div>
+    <div>
+      <div style="background:var(--ink);color:var(--gold);padding:18px 24px;font-family:var(--font-mono);font-size:14px;letter-spacing:0.05em;font-weight:600;text-align:center;margin-bottom:18px">SCORE = 100 − 25·CRITICO − 10·ALTO − 3·MEDIO</div>
+      <div class="findings-list">
+        <div class="finding-row medio"><span class="l">2 hallazgos MEDIO</span><span class="s">tipos implícitos</span><span class="v">−6</span></div>
+        <div class="finding-row alto"><span class="l">2 hallazgos ALTO</span><span class="s">sin COMMIT · GRANT directo</span><span class="v">−20</span></div>
+        <div class="finding-row crit"><span class="l">0 hallazgos CRÍTICO</span><span class="s">sin bloqueos</span><span class="v">0</span></div>
+      </div>
+      <p class="body" style="margin-top:20px;font-style:italic"><strong>Recomendación:</strong> resolver hallazgos ALTO antes de programar. Score objetivo ≥ 90 para auto-aprobación.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12: SECTION 03 -->
+<section class="slide divider" id="s12">
+  <div class="brand">
+    <span>Sección 03</span>
+    <span class="pn">12 / 16</span>
+  </div>
+  <div class="num">03</div>
+  <div class="text-block">
+    <span class="eyebrow">Capítulo Tres</span>
+    <h2 class="display" style="margin-top:8px">El ahorro.</h2>
+    <div class="rule"></div>
+    <p class="lede">Lo que MetLife gana cuando 800 horas/mes<br>vuelven al backlog del equipo.</p>
+  </div>
+</section>
+
+<!-- 13: KPI DASHBOARD -->
+<section class="slide" id="s13">
+  <div class="brand">
+    <span>Beneficios cuantificables</span>
+    <span class="pn">13 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">Lo que se gana</span>
+    <h2 class="display" style="margin-top:12px">En cifras.</h2>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi"><div class="big">−80%</div><div class="lab">Impacto en falla</div><div class="desc">Menos incidentes que escalan a producción.</div></div>
+    <div class="kpi"><div class="big">−90%</div><div class="lab">Issues por script</div><div class="desc">Sintaxis y reglas resueltas antes del DBA.</div></div>
+    <div class="kpi"><div class="big">−75%</div><div class="lab">Ciclo total</div><div class="desc">De 14–40 h a 3.5–7.5 h promedio.</div></div>
+    <div class="kpi"><div class="big">+60%</div><div class="lab">Velocidad despliegue</div><div class="desc">Más datafix con la misma capacidad.</div></div>
+    <div class="kpi"><div class="big">100%</div><div class="lab">Trazabilidad</div><div class="desc">Reporte exportable adjunto al ticket.</div></div>
+    <div class="kpi"><div class="big">24/7</div><div class="lab">Disponibilidad</div><div class="desc">Sin depender de la hora del DBA.</div></div>
+  </div>
+</section>
+
+<!-- 14: QUOTE / ROI -->
+<section class="slide dark quote-slide" id="s14">
+  <div class="brand">
+    <span>Modelo de ROI</span>
+    <span class="pn">14 / 16</span>
+  </div>
+  <div style="margin:auto 0">
+    <span class="eyebrow">Cálculo mensual</span>
+    <blockquote style="margin-top:24px">860 horas / mes &mdash;<br>CLP <span style="color:var(--gold)">18.9 millones</span> ahorrados.</blockquote>
+    <cite>40 datafix × 21.5 h ahorradas · ROI 4.2× · payback &lt; 7 días</cite>
+  </div>
+</section>
+
+<!-- 15: ROADMAP TIMELINE -->
+<section class="slide" id="s15">
+  <div class="brand">
+    <span>Roadmap · 8 semanas</span>
+    <span class="pn">15 / 16</span>
+  </div>
+  <div style="margin-top:7vh">
+    <span class="eyebrow">De piloto a producción</span>
+    <h2 class="display" style="margin-top:12px">Ocho semanas.</h2>
+    <p class="body" style="margin-top:16px">Modelo "land &amp; expand" partiendo por un equipo (Pólizas o Comisiones), con métricas semanales y reporte ejecutivo al cierre de cada fase.</p>
+  </div>
+
+  <div class="timeline">
+    <div class="phase">
+      <div class="dot"></div>
+      <span class="week">Semanas 1–2</span>
+      <h4>Setup</h4>
+      <p>Despliegue contenedor en DEV. Conexión Oracle XE pruebas. Carga reglas MetLife.</p>
+    </div>
+    <div class="phase">
+      <div class="dot"></div>
+      <span class="week">Semanas 3–4</span>
+      <h4>Piloto</h4>
+      <p>2 equipos · 30 scripts reales. Métricas vs proceso actual. Tuning de reglas.</p>
+    </div>
+    <div class="phase">
+      <div class="dot"></div>
+      <span class="week">Semanas 5–6</span>
+      <h4>Expansión</h4>
+      <p>3 equipos adicionales. SSO con AD MetLife. Dashboard ejecutivo.</p>
+    </div>
+    <div class="phase">
+      <div class="dot"></div>
+      <span class="week">Semanas 7–8</span>
+      <h4>Producción</h4>
+      <p>Despliegue en producción · alta disponibilidad · soporte SLA · capacitación.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16: CLOSING -->
+<section class="slide dark" id="s16">
+  <div class="brand">
+    <span class="mark">
+      <svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="#B8893E" stroke-width="1"/><circle cx="7" cy="7" r="2" fill="#B8893E"/></svg>
+      Datafix Automatico
+    </span>
+    <span>16 / 16</span>
+  </div>
+
+  <div style="margin-top:auto;margin-bottom:32px">
+    <span class="eyebrow" style="color:var(--gold)">Próximos pasos</span>
+    <h2 class="display" style="color:var(--paper);margin-top:12px;max-width:18ch">Programemos un piloto de 30 días.</h2>
+    <p class="lede" style="color:rgba(244,238,226,0.65);margin-top:18px">Sin compromiso, con métricas semanales y reporte ejecutivo.</p>
+  </div>
+
+  <div class="closing-grid">
+    <div class="step">
+      <div class="n">i.</div>
+      <h4>Sesión técnica</h4>
+      <p>Demo de 45 minutos con equipos DBA y Pólizas. Calibración de reglas Oracle MetLife.</p>
+    </div>
+    <div class="step">
+      <div class="n">ii.</div>
+      <h4>Piloto 30 días</h4>
+      <p>Ambiente DEV, dos equipos, 30 scripts reales. Métricas comparadas con la línea base.</p>
+    </div>
+    <div class="step">
+      <div class="n">iii.</div>
+      <h4>Comité ejecutivo</h4>
+      <p>Resultados frente al comité. Decisión go / no-go a producción al cierre del piloto.</p>
+    </div>
+  </div>
+
+  <div class="contact">contacto@datafix.cl &nbsp;·&nbsp; +56 9 6543 2100 &nbsp;·&nbsp; metlife.com</div>
+</section>
+
+<!-- nav dots -->
+<div class="nav-dots" id="navDots"></div>
+<div class="kbhint">↑ ↓ navegar · esc · imprimir</div>
+
+<script>
+(function(){
+  const slides = document.querySelectorAll('section.slide');
+  const dotsContainer = document.getElementById('navDots');
+
+  // build dots
+  slides.forEach((s,i)=>{
+    const a = document.createElement('a');
+    a.href = '#'+s.id;
+    a.title = 'Slide '+(i+1);
+    dotsContainer.appendChild(a);
+  });
+  const dots = dotsContainer.querySelectorAll('a');
+
+  // active dot via IntersectionObserver
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const idx = Array.from(slides).indexOf(e.target);
+        dots.forEach(d=>d.classList.remove('active'));
+        if(dots[idx]) dots[idx].classList.add('active');
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s=>io.observe(s));
+
+  // keyboard navigation
+  let current = 0;
+  function go(i){
+    if(i<0 || i>=slides.length) return;
+    current = i;
+    slides[i].scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowDown' || e.key==='PageDown' || e.key===' '){ e.preventDefault(); go(current+1); }
+    else if(e.key==='ArrowUp' || e.key==='PageUp'){ e.preventDefault(); go(current-1); }
+    else if(e.key==='Home'){ e.preventDefault(); go(0); }
+    else if(e.key==='End'){ e.preventDefault(); go(slides.length-1); }
+  });
+
+  // sync current with scroll
+  const io2 = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ current = Array.from(slides).indexOf(e.target); }
+    });
+  }, { threshold: 0.6 });
+  slides.forEach(s=>io2.observe(s));
+})();
+</script>
+</body>
+</html>

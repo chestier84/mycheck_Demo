@@ -1,0 +1,6 @@
+CREATE TABLE PRueba (
+    id NUMBER PRIMARY KEY,
+    nombre VARCHAR2(100),
+    fecha_creacion DATE DEFAULT SYSDATE
+);
+COMMIT;

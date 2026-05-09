@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rutas de Contenedores - Datafix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .section h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        .container-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        .container-info h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .route {
+            background: #fff;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+            border-left: 3px solid #667eea;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            word-break: break-all;
+            color: #333;
+        }
+        .label {
+            font-weight: bold;
+            color: #667eea;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .cloud-guide {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #00a8cc;
+        }
+        .cloud-guide h3 {
+            color: #00a8cc;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        .step {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #00a8cc;
+        }
+        .step-number {
+            display: inline-block;
+            background: #00a8cc;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #856404;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #155724;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐳 Rutas de Contenedores Datafix</h1>
+
+        <!-- RUTAS DE CONTENEDORES -->
+        <div class="section">
+            <h2>📁 Rutas de Contenedores</h2>
+            
+            <div class="container-info">
+                <h3>🔧 Backend (datafix-backend)</h3>
+                <div class="route">
+                    <span class="label">Working Dir:</span> <code>/app</code>
+                </div>
+                <div class="route">
+                    <span class="label">Volúmenes:</span> Sin montajes configurados
+                </div>
+                <div class="warning">
+                    ⚠️ Para desarrollo con hot reload, agrega un bind mount en docker-compose.yml
+                </div>
+            </div>
+
+            <div class="container-info">
+                <h3>🌐 Frontend (datafix-frontend)</h3>
+                <div class="route">
+                    <span class="label">Working Dir:</span> <code>/</code>
+                </div>
+                <div class="route">
+                    <span class="label">HTML:</span> <code>C:\...\datafix_oracle.html</code> → <code>/usr/share/nginx/html/index.html</code> (read-only)
+                </div>
+                <div class="route">
+                    <span class="label">Config:</span> <code>C:\...\backend\nginx.conf</code> → <code>/etc/nginx/conf.d/default.conf</code> (read-only)
+                </div>
+            </div>
+
+            <div class="container-info">
+                <h3>🗄️ Base de Datos (oracle-xe)</h3>
+                <div class="route">
+                    <span class="label">Working Dir:</span> <code>/home/oracle</code>
+                </div>
+                <div class="route">
+                    <span class="label">Data Volume:</span> <code>backend_oracle-data</code> → <code>/opt/oracle/oradata</code>
+                </div>
+                <div class="route">
+                    <span class="label">Init Scripts:</span> <code>C:\...\backend\init</code> → <code>/opt/oracle/scripts/startup</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- GUÍA DE SUBIDA A LA NUBE -->
+        <div class="section">
+            <h2>☁️ Cómo Subir tu Aplicación a la Nube</h2>
+            
+            <div class="cloud-guide">
+                <h3>Opciones de Plataformas</h3>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Plataforma</th>
+                            <th>Ventajas</th>
+                            <th>Complejidad</th>
+                            <th>Costo Aprox.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Docker Hub + Railway</strong></td>
+                            <td>Simple, rápido, bueno para MVP</td>
+                            <td>⭐ Muy Fácil</td>
+                            <td>$5-50/mes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AWS (ECR + ECS)</strong></td>
+                            <td>Escalable, profesional</td>
+                            <td>⭐⭐⭐ Moderado</td>
+                            <td>$20-200/mes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Azure Container Instances</strong></td>
+                            <td>Integración MS, flexible</td>
+                            <td>⭐⭐ Fácil</td>
+                            <td>$10-100/mes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Google Cloud Run</strong></td>
+                            <td>Serverless, pay-per-use</td>
+                            <td>⭐⭐ Fácil</td>
+                            <td>$0-30/mes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Kubernetes (K8s)</strong></td>
+                            <td>Máximo control, escalable</td>
+                            <td>⭐⭐⭐⭐ Difícil</td>
+                            <td>$50-500/mes</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 style="margin-top: 25px; color: #00a8cc;">📋 Pasos Generales para Subir a la Nube</h3>
+
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Preparar Docker</strong>
+                    <p style="margin-top: 8px;">Asegúrate de tener un <code>Dockerfile</code> optimizado para cada servicio (backend, frontend, oracle). Crea un <code>.dockerignore</code> para excluir archivos innecesarios.</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Crear Registros de Contenedores</strong>
+                    <p style="margin-top: 8px;">
+                        <strong>Docker Hub:</strong> <code>docker login</code> → sube imágenes<br>
+                        <strong>AWS ECR:</strong> Crea un repositorio y autentica con AWS CLI<br>
+                        <strong>Google Artifact Registry:</strong> Similar a ECR
+                    </p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Etiquetar y Subir Imágenes</strong>
+                    <p style="margin-top: 8px;"><code>docker tag backend-backend:latest tu_usuario/backend:latest</code><br>
+                    <code>docker push tu_usuario/backend:latest</code></p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Configurar Variables de Entorno</strong>
+                    <p style="margin-top: 8px;">Define todas las contraseñas, APIs, URLs de BD en las plataformas (Secrets/Environment Variables). Nunca hardcodees credenciales.</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <strong>Orquestar Contenedores</strong>
+                    <p style="margin-top: 8px;">
+                        <strong>docker-compose:</strong> Para máquinas simples<br>
+                        <strong>ECS/Google Cloud Run:</strong> Serverless automático<br>
+                        <strong>Kubernetes:</strong> Para clustering y alta disponibilidad
+                    </p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <strong>Configurar Base de Datos</strong>
+                    <p style="margin-top: 8px;">
+                        <strong>Opción A:</strong> Oracle Cloud Database (gestionar por ti)<br>
+                        <strong>Opción B:</strong> Contenedor Oracle en la nube (mantener tú mismo)<br>
+                        <strong>Recomendación:</strong> Usa Oracle Cloud Database (más confiable)
+                    </p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">7</span>
+                    <strong>Monitoreo y Logs</strong>
+                    <p style="margin-top: 8px;">Configura CloudWatch, Stackdriver o ELK para ver logs. Cada plataforma tiene sus herramientas de monitoreo.</p>
+                </div>
+
+                <div class="success" style="margin-top: 20px;">
+                    ✅ <strong>Recomendación para ti:</strong> Comienza con <strong>Railway</strong> o <strong>Google Cloud Run</strong> (más simples), luego migra a AWS/Azure si necesitas mayor escala.
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPARATIVA RÁPIDA -->
+        <div class="section">
+            <h2>⚡ Comparativa Rápida: Local vs Nube</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspecto</th>
+                        <th>Local (Actual)</th>
+                        <th>Nube (Recomendado)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Disponibilidad</strong></td>
+                        <td>Mientras tu PC esté encendido</td>
+                        <td>24/7 global</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Escalabilidad</strong></td>
+                        <td>Limitada (CPU/RAM del PC)</td>
+                        <td>Automática (auto-scaling)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Backups</strong></td>
+                        <td>Manual (tu responsabilidad)</td>
+                        <td>Automático (2-30 copias)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Seguridad</strong></td>
+                        <td>Solo en tu red local</td>
+                        <td>SSL/TLS, firewalls, IAM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Costo</strong></td>
+                        <td>$0 (electricidad)</td>
+                        <td>$5-200/mes aprox.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PRÓXIMOS PASOS -->
+        <div class="section">
+            <h2>🚀 Próximos Pasos</h2>
+            <ol style="margin-left: 20px; line-height: 2;">
+                <li>Crea una cuenta en <strong>Railway.app</strong> o <strong>Google Cloud</strong></li>
+                <li>Sube tu repo a <strong>GitHub</strong></li>
+                <li>Conecta el repo con la plataforma (auto-deploy)</li>
+                <li>Configura variables de entorno (contraseña Oracle, etc.)</li>
+                <li>Deploy automático en cada push</li>
+                <li>Prueba en producción y monitorea</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

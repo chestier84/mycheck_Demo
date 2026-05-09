@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Containers en Docker Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+        .success-box {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #28a745;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .status {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+        .images {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .image-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        .image-item h3 {
+            color: #28a745;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .link {
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 8px 0;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            color: #1976d2;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .link:hover {
+            background: #c8e6c9;
+        }
+        .copy-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+        .copy-btn:hover {
+            background: #1565c0;
+        }
+        .next-steps {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .next-steps h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        .step {
+            color: #856404;
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        .docker-run {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+        .badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-box">
+            <h1>✅ Contenedores Subidos Exitosamente</h1>
+            <p class="status">Tus imágenes Docker ya están en Docker Hub</p>
+
+            <div class="images">
+                <h2 style="color: #28a745; margin-bottom: 20px;">📦 Imágenes Disponibles</h2>
+
+                <div class="image-item">
+                    <h3>🔧 Backend (FastAPI)</h3>
+                    <div class="link" onclick="copiar(this)">
+                        chestier84/datafix-backend:latest
+                        <span class="badge">LATEST</span>
+                    </div>
+                    <div class="link" onclick="copiar(this)">
+                        chestier84/datafix-backend:v1.0
+                        <span class="badge">v1.0</span>
+                    </div>
+                    <p style="margin-top: 10px; color: #666; font-size: 0.95em;">
+                        📊 Tamaño: 68.6 MB | 🐍 Python 3.11 + Uvicorn + FastAPI
+                    </p>
+                </div>
+
+                <div class="image-item">
+                    <h3>🌐 Frontend (Nginx)</h3>
+                    <div class="link" onclick="copiar(this)">
+                        chestier84/datafix-frontend:latest
+                        <span class="badge">LATEST</span>
+                    </div>
+                    <div class="link" onclick="copiar(this)">
+                        chestier84/datafix-frontend:v1.0
+                        <span class="badge">v1.0</span>
+                    </div>
+                    <p style="margin-top: 10px; color: #666; font-size: 0.95em;">
+                        📊 Tamaño: ~2.5 MB | 🚀 Alpine Linux + Nginx
+                    </p>
+                </div>
+            </div>
+
+            <div class="next-steps">
+                <h3>🚀 Próximos Pasos</h3>
+                
+                <div class="step">
+                    <strong>1. Visualizar en Docker Hub:</strong><br>
+                    👉 <a href="https://hub.docker.com/u/chestier84" target="_blank" style="color: #1976d2;">
+                        docker.com/u/chestier84
+                    </a>
+                </div>
+
+                <div class="step">
+                    <strong>2. Descargar y ejecutar localmente:</strong><br>
+                    <div class="docker-run">
+docker pull chestier84/datafix-backend:latest
+docker run -p 8000:8000 chestier84/datafix-backend:latest
+                    </div>
+                </div>
+
+                <div class="step">
+                    <strong>3. Desplegar en Producción:</strong><br>
+                    <ul style="margin-left: 20px; margin-top: 8px;">
+                        <li><strong>AWS ECS:</strong> Crea un cluster y referencia estas imágenes</li>
+                        <li><strong>Kubernetes:</strong> Usa estas imágenes en tus manifests</li>
+                        <li><strong>Railway/Heroku:</strong> Conecta con GitHub para auto-deploy</li>
+                        <li><strong>Docker Swarm:</strong> Despliega con docker-compose</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <strong>4. Usar en docker-compose (Producción):</strong><br>
+                    <div class="docker-run">
+services:
+  backend:
+    image: chestier84/datafix-backend:v1.0
+    ports:
+      - "8000:8000"
+  
+  frontend:
+    image: chestier84/datafix-frontend:v1.0
+    ports:
+      - "80:80"
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #d4edda; border: 2px solid #28a745; border-radius: 10px; padding: 20px; margin-top: 20px; text-align: left;">
+                <h3 style="color: #155724; margin-bottom: 10px;">💡 Información Importante</h3>
+                <ul style="color: #155724; margin-left: 20px; line-height: 1.8;">
+                    <li>Las imágenes son <strong>públicas</strong> en Docker Hub (cualquiera puede descargarlas)</li>
+                    <li>Para hacerlas <strong>privadas</strong>, ve a Docker Hub → Imagen → Settings → Make Private</li>
+                    <li>Las etiquetas <code>:latest</code> apuntan a la versión más nueva</li>
+                    <li>Las etiquetas <code>:v1.0</code> son versiones específicas (recomendado para producción)</li>
+                    <li>Para actualizar: modifica el código, rebuild, y push con nuevas etiquetas</li>
+                </ul>
+            </div>
+
+            <button onclick="location.href='https://hub.docker.com/u/chestier84'" 
+                    style="background: #28a745; color: white; border: none; padding: 12px 30px; 
+                           border-radius: 8px; font-size: 1em; cursor: pointer; margin-top: 20px;">
+                🐳 Ver en Docker Hub
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function copiar(elemento) {
+            const texto = elemento.innerText.split('\n')[0].trim();
+            navigator.clipboard.writeText(texto).then(() => {
+                alert('Copiado: ' + texto);
+            });
+        }
+    </script>
+</body>
+</html>

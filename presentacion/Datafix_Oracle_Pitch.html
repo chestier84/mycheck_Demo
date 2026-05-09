@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Datafix Oracle Automático — Pitch comercial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:           #0B1320;
+    --bg-2:         #0E1A2E;
+    --surface:      #142340;
+    --surface-2:    #1B2D52;
+    --border:       rgba(160, 190, 230, 0.12);
+    --border-2:     rgba(160, 190, 230, 0.28);
+    --text:         #E8EEF8;
+    --text-dim:     #9FB1CE;
+    --text-muted:   #6F84A8;
+    --accent:       #D4A73A;       /* gold */
+    --accent-dim:   rgba(212, 167, 58, 0.16);
+    --blue:         #4F8FE4;
+    --blue-dim:     rgba(79, 143, 228, 0.16);
+    --teal:         #3FBDA8;
+    --teal-dim:     rgba(63, 189, 168, 0.18);
+    --red:          #E26F6F;
+    --red-dim:      rgba(226, 111, 111, 0.16);
+    --amber:        #E2B254;
+    --amber-dim:    rgba(226, 178, 84, 0.16);
+    --green:        #5BC796;
+    --green-dim:    rgba(91, 199, 150, 0.16);
+    --grid:         rgba(160, 190, 230, 0.05);
+
+    --font-body:    'IBM Plex Sans', system-ui, sans-serif;
+    --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+    --font-serif:   'IBM Plex Serif', Georgia, serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg:         #F5F2EA;
+      --bg-2:       #EFEBE0;
+      --surface:    #FFFFFF;
+      --surface-2:  #FAF7EE;
+      --border:     rgba(30, 50, 80, 0.10);
+      --border-2:   rgba(30, 50, 80, 0.22);
+      --text:       #142340;
+      --text-dim:   #4A5A78;
+      --text-muted: #6F84A8;
+      --grid:       rgba(30, 50, 80, 0.05);
+    }
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin:0; padding:0; height:100%; background: var(--bg); color: var(--text); font-family: var(--font-body); }
+  body {
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  ::selection { background: var(--accent); color: #0B1320; }
+
+  /* ------ Slide engine ------ */
+  .deck { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+  .slide {
+    scroll-snap-align: start;
+    min-height: 100vh;
+    width: 100%;
+    padding: 4rem 5rem 5rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .slide__num {
+    position: absolute; top: 1.6rem; right: 2rem;
+    font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em;
+    color: var(--text-muted);
+  }
+  .slide__brand {
+    position: absolute; top: 1.6rem; left: 2rem;
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--text-muted); text-transform: uppercase;
+  }
+  .slide__brand::before {
+    content: ""; display: inline-block; width: 8px; height: 8px;
+    background: var(--accent); margin-right: 0.6rem; vertical-align: middle;
+    transform: translateY(-1px);
+  }
+
+  .kicker {
+    font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.22em;
+    color: var(--accent); text-transform: uppercase; margin: 0 0 1.4rem;
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .kicker::before { content: ""; width: 28px; height: 1px; background: var(--accent); display: inline-block; }
+
+  h1.title { font-family: var(--font-serif); font-weight: 600; line-height: 1.05;
+    font-size: clamp(2.5rem, 6vw, 5.6rem); margin: 0 0 1.2rem; letter-spacing: -0.02em; color: var(--text); }
+  h2.section { font-family: var(--font-serif); font-weight: 600; line-height: 1.1;
+    font-size: clamp(2rem, 4.5vw, 3.6rem); margin: 0 0 0.8rem; letter-spacing: -0.015em; }
+  h3.subsection { font-family: var(--font-body); font-weight: 600;
+    font-size: 1.15rem; margin: 0 0 0.4rem; color: var(--text); }
+  p.lede { font-family: var(--font-body); font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+    color: var(--text-dim); max-width: 60ch; line-height: 1.55; margin: 0 0 1.5rem; }
+
+  /* ------- TITLE SLIDE ------- */
+  .slide--title { background: linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 100%); }
+  .slide--title .corner-tl, .slide--title .corner-br {
+    position: absolute; width: 80px; height: 80px;
+    border-color: var(--accent);
+  }
+  .slide--title .corner-tl { top: 3rem; left: 3rem; border-top: 2px solid; border-left: 2px solid; }
+  .slide--title .corner-br { bottom: 3rem; right: 3rem; border-bottom: 2px solid; border-right: 2px solid; }
+  .slide--title .meta {
+    font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-dim); letter-spacing: 0.1em;
+    margin-top: 2rem;
+  }
+  .pills { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 2rem; }
+  .pill {
+    font-family: var(--font-mono); font-size: 0.78rem; padding: 0.35rem 0.85rem;
+    border: 1px solid var(--border-2); border-radius: 999px; color: var(--text-dim);
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* ------- CARDS / GRIDS ------- */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+
+  .ve-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1.5rem; min-width: 0;
+    transition: border-color 200ms;
+  }
+  .ve-card:hover { border-color: var(--border-2); }
+  .ve-card--hero { background: linear-gradient(135deg, var(--surface) 0%, var(--surface-2) 100%);
+    border-color: var(--accent); border-left-width: 3px; }
+  .ve-card--recessed { background: var(--bg-2); border-color: transparent; }
+  .ve-card__label {
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.18em;
+    color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.6rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .ve-card__label::before {
+    content: ""; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; flex: none;
+  }
+
+  /* ------- STAT CALLOUT ------- */
+  .stat { font-family: var(--font-serif); font-weight: 600; line-height: 1; letter-spacing: -0.04em; }
+  .stat--xl { font-size: clamp(3.5rem, 8vw, 7rem); color: var(--text); }
+  .stat--lg { font-size: clamp(2.5rem, 5vw, 4rem); color: var(--text); }
+  .stat--accent { color: var(--accent); }
+  .stat__cap { font-family: var(--font-body); font-size: 1rem; color: var(--text-dim); margin-top: 0.6rem; line-height: 1.4; }
+
+  /* ------- MOCKUP CHROME ------- */
+  .mockup {
+    background: var(--surface-2); border: 1px solid var(--border-2);
+    border-radius: 6px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.20);
+  }
+  .mockup__bar {
+    background: var(--bg-2); border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1rem; display: flex; align-items: center; gap: 0.7rem;
+    font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);
+  }
+  .mockup__url { background: var(--bg); padding: 0.2rem 0.7rem; border-radius: 3px; flex: 1; color: var(--text-dim); }
+  .mockup__body { padding: 1.4rem; }
+
+  .codeblock {
+    font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.6;
+    background: #07101F; color: #E2E8F0; padding: 1.2rem 1.4rem;
+    border-radius: 4px; border: 1px solid var(--border);
+    white-space: pre-wrap; overflow-x: auto;
+  }
+  .codeblock .c-com { color: #6F84A8; font-style: italic; }
+  .codeblock .c-kw  { color: #4F8FE4; }
+  .codeblock .c-fn  { color: #D4A73A; }
+  .codeblock .c-str { color: #5BC796; }
+
+  .console {
+    font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.7;
+    background: #07101F; padding: 1rem 1.2rem; border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .console .l-info  { color: #9FB1CE; }
+  .console .l-plan  { color: #4F8FE4; }
+  .console .l-ok    { color: #5BC796; }
+  .console .l-err   { color: #E26F6F; }
+  .console .l-warn  { color: #E2B254; }
+
+  /* ------- BADGES & SEVERITY ------- */
+  .badge {
+    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.7rem;
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em;
+    border-radius: 3px; font-weight: 500;
+  }
+  .badge--critical { background: var(--red-dim); color: var(--red); border: 1px solid var(--red); }
+  .badge--high     { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber); }
+  .badge--medium   { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue); }
+  .badge--ok       { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
+
+  .finding {
+    border-left: 3px solid; padding: 0.9rem 1rem; margin-bottom: 0.7rem;
+    background: var(--bg-2); border-radius: 0 3px 3px 0;
+  }
+  .finding--critical { border-color: var(--red); }
+  .finding--high     { border-color: var(--amber); }
+  .finding__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+  .finding__title { font-weight: 600; font-size: 0.92rem; color: var(--text); }
+  .finding__match { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); }
+  .finding__rec { font-size: 0.82rem; color: var(--text-dim); margin-top: 0.4rem; font-style: italic; }
+
+  /* ------- TABLE ------- */
+  table { width: 100%; border-collapse: collapse; font-family: var(--font-body); font-size: 0.92rem; }
+  th, td { padding: 0.7rem 0.9rem; text-align: left; border-bottom: 1px solid var(--border); }
+  thead th { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); background: var(--bg-2); }
+  tbody tr:hover { background: var(--bg-2); }
+  td.mono { font-family: var(--font-mono); font-size: 0.85rem; }
+  td.right { text-align: right; }
+
+  /* ------- FLOW DIAGRAM ------- */
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; align-items: stretch; margin-top: 1rem; }
+  .flow__step {
+    background: var(--surface); border: 1px solid var(--border); padding: 1.6rem 1.2rem;
+    text-align: center; position: relative; min-width: 0;
+  }
+  .flow__step + .flow__step { border-left: none; }
+  .flow__step::after {
+    content: ""; position: absolute; right: -10px; top: 50%; transform: translateY(-50%);
+    width: 18px; height: 18px;
+    background:
+      linear-gradient(45deg, transparent 49%, var(--accent) 49% 51%, transparent 51%),
+      linear-gradient(-45deg, transparent 49%, var(--accent) 49% 51%, transparent 51%);
+    background-size: 100% 50%; background-position: top, bottom; background-repeat: no-repeat;
+    opacity: 0;
+  }
+  .flow__num {
+    display: inline-flex; width: 2rem; height: 2rem; border-radius: 50%; background: var(--accent);
+    color: #0B1320; font-family: var(--font-mono); font-weight: 600; align-items: center; justify-content: center;
+    margin-bottom: 0.8rem;
+  }
+  .flow__title { font-weight: 600; margin-bottom: 0.4rem; }
+  .flow__desc { color: var(--text-dim); font-size: 0.85rem; line-height: 1.4; }
+  .flow__arrow { color: var(--accent); font-family: var(--font-mono); }
+
+  /* ------- TIMELINE ------- */
+  .timeline { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 2rem; }
+  .timeline::before {
+    content: ""; position: absolute; top: 1.4rem; left: 5%; right: 5%; height: 2px;
+    background: var(--border-2);
+  }
+  .tl-item { position: relative; padding-top: 3rem; text-align: center; }
+  .tl-item__dot {
+    position: absolute; top: 0.6rem; left: 50%; transform: translateX(-50%);
+    width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--surface);
+    border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600; color: var(--accent);
+  }
+  .tl-item--done .tl-item__dot { background: var(--accent); color: #0B1320; }
+  .tl-item__date { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .tl-item__title { font-weight: 600; font-size: 1.1rem; margin-bottom: 0.4rem; }
+  .tl-item__desc { color: var(--text-dim); font-size: 0.88rem; line-height: 1.5; }
+
+  /* ------- SCORE CIRCLE ------- */
+  .score-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .score-circle {
+    width: 240px; height: 240px; border-radius: 50%;
+    background: conic-gradient(var(--green) 0% 87%, var(--bg-2) 87% 100%);
+    display: flex; align-items: center; justify-content: center; position: relative;
+  }
+  .score-circle::before {
+    content: ""; position: absolute; inset: 18px; background: var(--surface);
+    border-radius: 50%;
+  }
+  .score-circle__num {
+    position: relative; font-family: var(--font-serif); font-size: 5rem; font-weight: 600;
+    color: var(--green); letter-spacing: -0.04em;
+  }
+  .score-circle__num small { font-size: 1.2rem; color: var(--text-muted); margin-left: 0.2rem; font-family: var(--font-body); font-weight: 400; }
+  .score-verdict { font-family: var(--font-mono); letter-spacing: 0.25em; color: var(--green); font-weight: 600; }
+
+  /* ------- ROLES LIST ------- */
+  .role-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .role-row {
+    display: grid; grid-template-columns: 9rem 1fr;
+    background: var(--surface); padding: 0.85rem 1rem; border: 1px solid var(--border);
+    border-left: 3px solid var(--teal); border-radius: 0 3px 3px 0; gap: 1rem;
+  }
+  .role-row__name { font-weight: 600; }
+  .role-row__perms { color: var(--text-dim); font-size: 0.88rem; }
+
+  /* ------- CTA ------- */
+  .slide--cta { background: linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 60%, var(--surface) 100%); }
+  .cta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; margin-top: 2.5rem; }
+  .cta-card {
+    background: var(--surface); border: 1px solid var(--border-2);
+    padding: 1.8rem 1.5rem; border-radius: 4px; position: relative;
+  }
+  .cta-card__num {
+    position: absolute; top: -1rem; left: 1.5rem; width: 2.2rem; height: 2.2rem;
+    background: var(--accent); color: #0B1320; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-weight: 600;
+  }
+  .cta-card h3 { margin: 0.5rem 0 0.5rem; font-size: 1.2rem; }
+  .cta-card p { margin: 0; color: var(--text-dim); font-size: 0.92rem; line-height: 1.5; }
+
+  /* ------- ARCHITECTURE BOXES ------- */
+  .arch-grid { display: grid; grid-template-columns: 1fr 0.4rem 1fr 0.4rem 1fr; align-items: stretch; gap: 0; }
+  .arch-box { background: var(--surface); border: 1px solid var(--border); padding: 1.4rem 1.2rem; min-width: 0; }
+  .arch-box__head { background: var(--surface-2); margin: -1.4rem -1.2rem 1rem; padding: 0.7rem 1.2rem;
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.6rem; }
+  .arch-box__head .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+  .arch-box__head .name { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; }
+  .arch-box__tech { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.8rem; }
+  .arch-box ul { margin: 0; padding-left: 1.1rem; color: var(--text-dim); font-size: 0.88rem; line-height: 1.7; }
+  .arch-glue { display: flex; align-items: center; justify-content: center; color: var(--accent);
+    font-family: var(--font-mono); font-size: 1.3rem; }
+
+  /* ------- ROI TABLE ------- */
+  .roi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  .roi-card { background: var(--surface); border-top: 3px solid var(--accent); padding: 1.8rem 1.2rem;
+    text-align: center; min-width: 0; }
+  .roi-stat { font-family: var(--font-serif); font-size: clamp(2.4rem, 4vw, 3.6rem); font-weight: 600;
+    color: var(--text); line-height: 1; letter-spacing: -0.02em; }
+  .roi-cap { color: var(--text); font-size: 0.95rem; margin-top: 0.7rem; line-height: 1.4; }
+  .roi-sub { color: var(--text-muted); font-size: 0.8rem; font-style: italic; margin-top: 0.3rem; }
+
+  .compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 4px; overflow: hidden;
+  }
+  .compare__col { padding: 1.2rem 1.4rem; }
+  .compare__col--before { border-right: 1px solid var(--border); }
+  .compare__lbl {
+    font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.2em;
+    text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .compare__col--before .compare__lbl { color: var(--red); }
+  .compare__col--after .compare__lbl { color: var(--teal); }
+
+  /* ------- NAV ------- */
+  .nav {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 0.5rem; padding: 0.6rem 1rem;
+    background: rgba(11, 19, 32, 0.85); backdrop-filter: blur(10px);
+    border: 1px solid var(--border-2); border-radius: 999px; z-index: 100;
+  }
+  .nav__dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted);
+    cursor: pointer; transition: all 200ms; border: none; padding: 0;
+  }
+  .nav__dot:hover { background: var(--text-dim); }
+  .nav__dot.is-active { background: var(--accent); width: 24px; border-radius: 4px; }
+  .nav__hint {
+    position: fixed; top: 1rem; right: 1rem; font-family: var(--font-mono);
+    font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.1em;
+    background: rgba(11,19,32,0.8); padding: 0.35rem 0.7rem; border-radius: 3px;
+    border: 1px solid var(--border); z-index: 100;
+  }
+
+  /* ------- LAYOUT VARIANTS ------- */
+  .split { display: grid; grid-template-columns: 1fr 1.2fr; gap: 2.5rem; align-items: start; }
+  .split--reverse { grid-template-columns: 1.2fr 1fr; }
+  .stack > * + * { margin-top: 0.7rem; }
+
+  /* responsive */
+  @media (max-width: 900px) {
+    .slide { padding: 3rem 1.5rem 4rem; }
+    .grid-3, .grid-4, .flow, .timeline, .roi-grid, .cta-grid { grid-template-columns: 1fr 1fr; }
+    .split, .compare, .arch-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .arch-glue { display: none; }
+  }
+
+  /* print */
+  @media print {
+    body { background: white !important; color: black !important; background-image: none !important; }
+    .nav, .nav__hint { display: none !important; }
+    .slide { page-break-after: always; min-height: auto; padding: 2rem; border: none; }
+    * { color: black !important; background: white !important; box-shadow: none !important; }
+    .codeblock, .console { background: #f5f5f5 !important; border: 1px solid #ddd !important; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .slide.is-visible .ve-card,
+    .slide.is-visible .roi-card,
+    .slide.is-visible .arch-box,
+    .slide.is-visible .flow__step,
+    .slide.is-visible .tl-item,
+    .slide.is-visible .cta-card,
+    .slide.is-visible .role-row {
+      animation: fadeUp 600ms cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+    }
+    .slide.is-visible .ve-card:nth-child(1) { animation-delay: 0ms; }
+    .slide.is-visible .ve-card:nth-child(2) { animation-delay: 80ms; }
+    .slide.is-visible .ve-card:nth-child(3) { animation-delay: 160ms; }
+    .slide.is-visible .ve-card:nth-child(4) { animation-delay: 240ms; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="nav__hint">↑ ↓ NAVEGAR · CMD+P PARA IMPRIMIR</div>
+
+<div class="deck" id="deck">
+
+  <!-- ============ SLIDE 01 — TITLE ============ -->
+  <section class="slide slide--title" data-title="Portada">
+    <span class="corner-tl"></span>
+    <span class="corner-br"></span>
+    <span class="slide__brand">Plataforma de pre-chequeo Oracle</span>
+    <span class="slide__num">01 / 13</span>
+
+    <p class="kicker">Pitch comercial · Abril 2026</p>
+    <h1 class="title">Datafix Oracle<br>Automático.</h1>
+    <p class="lede" style="font-family: var(--font-serif); font-size: 1.6rem; max-width: 36ch; color: var(--text-dim); font-style: italic;">
+      Validar, depurar y pre-chequear scripts SQL/PL-SQL antes de tocar producción.
+    </p>
+
+    <div class="pills">
+      <span class="pill">Validación sintáctica</span>
+      <span class="pill">10 reglas de auditoría</span>
+      <span class="pill">DRY RUN con ROLLBACK</span>
+      <span class="pill">Reporte 0–100</span>
+    </div>
+
+    <div class="meta">chestier@gmail.com · v1.0</div>
+  </section>
+
+  <!-- ============ SLIDE 02 — PROBLEM ============ -->
+  <section class="slide" data-title="El desafío">
+    <span class="slide__brand">El desafío</span>
+    <span class="slide__num">02 / 13</span>
+    <p class="kicker">El desafío</p>
+    <h2 class="section">Todo cambio sobre Oracle es un riesgo latente.</h2>
+    <p class="lede">Los DBA y equipos de desarrollo reciben scripts que deben aplicar sobre producción. Pero el flujo actual está roto.</p>
+
+    <div class="split" style="margin-top: 1rem;">
+      <div class="stack">
+        <div class="ve-card">
+          <div class="ve-card__label">Revisión manual</div>
+          <p style="margin:0;color:var(--text-dim);font-size:0.92rem;">Cada script se revisa a mano; los criterios varían entre personas y equipos.</p>
+        </div>
+        <div class="ve-card">
+          <div class="ve-card__label">Errores invisibles</div>
+          <p style="margin:0;color:var(--text-dim);font-size:0.92rem;">Comandos críticos como <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--red);">DROP</code>, <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--red);">TRUNCATE</code> o <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--red);">ALTER SYSTEM</code> pasan sin alerta.</p>
+        </div>
+        <div class="ve-card">
+          <div class="ve-card__label">Sin simulación real</div>
+          <p style="margin:0;color:var(--text-dim);font-size:0.92rem;">Los cambios se aplican directo en QA o, peor aún, en producción.</p>
+        </div>
+        <div class="ve-card">
+          <div class="ve-card__label">Reporte inexistente</div>
+          <p style="margin:0;color:var(--text-dim);font-size:0.92rem;">No queda trazabilidad formal del cambio ni de quién lo validó.</p>
+        </div>
+      </div>
+
+      <div class="ve-card ve-card--hero" style="padding:2rem;">
+        <div class="ve-card__label" style="color: var(--accent);">¿Cuál es el costo?</div>
+        <div class="stat stat--xl stat--accent" style="margin-top:1rem;">1 hora</div>
+        <p class="stat__cap" style="font-style:italic;">de caída media del core por incidente.</p>
+        <hr style="border:none;border-top:1px solid var(--border);margin:1.5rem 0;">
+        <div class="stat stat--lg" style="color:var(--text);">USD 300K</div>
+        <p class="stat__cap">Pérdida promedio por incidente crítico de BD.</p>
+        <div class="stat stat--lg" style="color:var(--text);margin-top:1.2rem;">72 %</div>
+        <p class="stat__cap">De los incidentes provienen de cambios humanos.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 03 — SOLUTION ============ -->
+  <section class="slide" data-title="La solución">
+    <span class="slide__brand">La solución</span>
+    <span class="slide__num">03 / 13</span>
+    <p class="kicker">La solución</p>
+    <h2 class="section">Datafix Oracle Automático.</h2>
+    <p class="lede">Un pre-chequeo integral de scripts Oracle en minutos — antes de producción, sin tocar producción.</p>
+
+    <div class="mockup" style="margin-top: 1.5rem;">
+      <div class="mockup__bar">
+        <span style="color:#E26F6F;">●</span>
+        <span style="color:#E2B254;">●</span>
+        <span style="color:#5BC796;">●</span>
+        <span class="mockup__url">http://localhost:8080  —  Datafix Oracle Automático</span>
+      </div>
+      <div class="mockup__body" style="background: var(--surface);">
+        <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:0.9rem;margin-bottom:1.2rem;">
+          <strong style="font-family:var(--font-serif);font-size:1.3rem;">Datafix Oracle Automático</strong>
+          <span style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-muted);">admin · Administrador</span>
+        </div>
+        <div class="grid-4">
+          <div class="ve-card" style="border-top:2px solid var(--accent);">
+            <div class="ve-card__label">Editor SQL</div>
+            <p style="margin:0;color:var(--text-dim);font-size:0.85rem;">Pegue o escriba el script.</p>
+            <div class="badge badge--ok" style="margin-top:0.8rem;">LISTO</div>
+          </div>
+          <div class="ve-card" style="border-top:2px solid var(--accent);">
+            <div class="ve-card__label">Validar</div>
+            <p style="margin:0;color:var(--text-dim);font-size:0.85rem;">Sintaxis + reglas críticas.</p>
+            <div class="badge badge--ok" style="margin-top:0.8rem;">LISTO</div>
+          </div>
+          <div class="ve-card" style="border-top:2px solid var(--accent);">
+            <div class="ve-card__label">DRY RUN</div>
+            <p style="margin:0;color:var(--text-dim);font-size:0.85rem;">Oracle real con ROLLBACK.</p>
+            <div class="badge badge--ok" style="margin-top:0.8rem;">LISTO</div>
+          </div>
+          <div class="ve-card" style="border-top:2px solid var(--accent);">
+            <div class="ve-card__label">Reporte</div>
+            <p style="margin:0;color:var(--text-dim);font-size:0.85rem;">Puntaje y veredicto 0–100.</p>
+            <div class="badge badge--ok" style="margin-top:0.8rem;">LISTO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 04 — FLOW ============ -->
+  <section class="slide" data-title="Flujo end-to-end">
+    <span class="slide__brand">Flujo end-to-end</span>
+    <span class="slide__num">04 / 13</span>
+    <p class="kicker">Flujo end-to-end</p>
+    <h2 class="section">De script crudo a aprobación — en 4 pasos.</h2>
+    <p class="lede">El mismo flujo que un DBA experto seguiría — automatizado, repetible y auditable.</p>
+
+    <div class="flow" style="margin-top: 2rem;">
+      <div class="flow__step">
+        <div class="flow__num">1</div>
+        <div class="flow__title">Validar sintaxis</div>
+        <div class="flow__desc">Paréntesis, BEGIN/END, terminadores.</div>
+      </div>
+      <div class="flow__step">
+        <div class="flow__num">2</div>
+        <div class="flow__title">Auditar reglas</div>
+        <div class="flow__desc">10 reglas Oracle críticas (DROP, TRUNCATE, ALTER SYSTEM, …).</div>
+      </div>
+      <div class="flow__step">
+        <div class="flow__num">3</div>
+        <div class="flow__title">Simular DRY RUN</div>
+        <div class="flow__desc">SAVEPOINT + ROLLBACK contra Oracle XE real.</div>
+      </div>
+      <div class="flow__step">
+        <div class="flow__num">4</div>
+        <div class="flow__title">Reporte + Puntaje</div>
+        <div class="flow__desc">HTML descargable con veredicto final 0–100.</div>
+      </div>
+    </div>
+
+    <div class="ve-card ve-card--hero" style="margin-top: 2.5rem; text-align: center; padding: 1.4rem;">
+      <span style="font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; color: var(--text);">
+        De <span style="color:var(--red);text-decoration:line-through;text-decoration-color:rgba(226,111,111,0.4);">2 días de revisión manual</span> a
+        <span style="color: var(--accent);">2 minutos</span> de pre-chequeo automatizado.
+      </span>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 05 — STEP 1 VALIDATION ============ -->
+  <section class="slide" data-title="Paso 1 · Validación">
+    <span class="slide__brand">Paso 1 · Validación</span>
+    <span class="slide__num">05 / 13</span>
+    <p class="kicker">Paso 1 — Validación sintáctica</p>
+    <h2 class="section">La primera línea de defensa.</h2>
+    <p class="lede">Detectar errores antes de siquiera pensar en ejecutar.</p>
+
+    <div class="split">
+      <div class="stack">
+        <div class="ve-card">
+          <div class="ve-card__label" style="color:var(--green);">Balanceo de paréntesis</div>
+          <p style="margin:0;color:var(--text-dim);font-size:0.92rem;">Evita <code style="font-family:var(--font-mono);font-size:0.85em;">PLS-00103</code> en runtime.</p>
+        </div>
+        <div class="ve-card">
+          <div class="ve-card__label" style="color:var(--green);">Coherencia BEGIN/END</div>
+          <p style="margin:0;color:var(--text-dim);font-size:0.92rem;">Bloques PL/SQL correctos y bien anidados.</p>
+        </div>
+        <div class="ve-card">
+          <div class="ve-card__label" style="color:var(--green);">Terminadores correctos</div>
+          <p style="margin:0;color:var(--text-dim);font-size:0.92rem;">Un statement, un punto y coma. Cada bloque, una barra.</p>
+        </div>
+        <div class="ve-card">
+          <div class="ve-card__label" style="color:var(--green);">Detección temprana</div>
+          <p style="margin:0;color:var(--text-dim);font-size:0.92rem;">Menos de 1 segundo por script típico.</p>
+        </div>
+      </div>
+
+      <div class="mockup">
+        <div class="mockup__bar">
+          <span style="color:#E26F6F;">●</span><span style="color:#E2B254;">●</span><span style="color:#5BC796;">●</span>
+          <span class="mockup__url">script_01.sql</span>
+        </div>
+        <pre class="codeblock" style="margin:0;border-radius:0;border:none;"><span class="c-com">-- Actualiza datos de empleados</span>
+<span class="c-kw">UPDATE</span> employees
+   <span class="c-kw">SET</span> salary = salary * <span class="c-str">1.10</span>
+ <span class="c-kw">WHERE</span> department_id = <span class="c-str">20</span>;
+
+<span class="c-kw">BEGIN</span>
+  <span class="c-kw">FOR</span> r <span class="c-kw">IN</span> (<span class="c-kw">SELECT</span> * <span class="c-kw">FROM</span> audit_log) <span class="c-kw">LOOP</span>
+    <span class="c-fn">DBMS_OUTPUT.PUT_LINE</span>(r.msg);
+  <span class="c-kw">END LOOP</span>;
+<span class="c-kw">END</span>;
+/</pre>
+        <div style="background:#062418;color:#86EFAC;padding:0.7rem 1.2rem;font-family:var(--font-mono);font-size:0.82rem;border-top:1px solid var(--green);">
+          ✓ Sintaxis OK · 11 líneas · 2 statements · 0 errores
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 06 — STEP 2 AUDIT ============ -->
+  <section class="slide" data-title="Paso 2 · Auditoría">
+    <span class="slide__brand">Paso 2 · Auditoría</span>
+    <span class="slide__num">06 / 13</span>
+    <p class="kicker">Paso 2 — Auditoría de código</p>
+    <h2 class="section">10 reglas Oracle críticas.</h2>
+    <p class="lede">Alertas automáticas sobre los comandos que históricamente destruyen producción.</p>
+
+    <div class="split">
+      <div>
+        <div class="ve-card__label" style="margin-bottom:0.8rem;">Catálogo de reglas</div>
+        <table>
+          <thead>
+            <tr><th>Código</th><th>Regla</th><th class="right">Severidad</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">ORA-001</td><td>DROP TABLE</td><td class="right"><span class="badge badge--critical">CRÍTICO</span></td></tr>
+            <tr><td class="mono">ORA-002</td><td>TRUNCATE</td><td class="right"><span class="badge badge--critical">CRÍTICO</span></td></tr>
+            <tr><td class="mono">ORA-003</td><td>ALTER SYSTEM</td><td class="right"><span class="badge badge--critical">CRÍTICO</span></td></tr>
+            <tr><td class="mono">ORA-004</td><td>GRANT DBA</td><td class="right"><span class="badge badge--critical">CRÍTICO</span></td></tr>
+            <tr><td class="mono">ORA-005</td><td>UPDATE sin WHERE</td><td class="right"><span class="badge badge--high">ALTO</span></td></tr>
+            <tr><td class="mono">ORA-006</td><td>DELETE sin WHERE</td><td class="right"><span class="badge badge--high">ALTO</span></td></tr>
+            <tr><td class="mono">ORA-007</td><td>COMMIT dentro de FOR</td><td class="right"><span class="badge badge--high">ALTO</span></td></tr>
+            <tr><td class="mono">ORA-008</td><td>Cursor sin CLOSE</td><td class="right"><span class="badge badge--medium">MEDIO</span></td></tr>
+            <tr><td class="mono">ORA-009</td><td>SELECT *</td><td class="right"><span class="badge badge--medium">MEDIO</span></td></tr>
+            <tr><td class="mono">ORA-010</td><td>Hardcoded password</td><td class="right"><span class="badge badge--medium">MEDIO</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="ve-card__label" style="margin-bottom:0.8rem;">Resultado de la auditoría</div>
+        <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+          <span class="badge badge--critical">CRÍTICO · 1</span>
+          <span class="badge badge--high">ALTO · 2</span>
+          <span class="badge badge--medium">MEDIO · 0</span>
+        </div>
+
+        <div class="finding finding--critical">
+          <div class="finding__head">
+            <span class="finding__title">ORA-001 · DROP TABLE</span>
+            <span class="badge badge--critical">CRÍTICO</span>
+          </div>
+          <p style="margin:0.3rem 0;color:var(--text-dim);font-size:0.88rem;">Operación destructiva irreversible sin WHERE.</p>
+          <div class="finding__match">match: <code>DROP TABLE employees_old;</code></div>
+          <div class="finding__rec">💡 Use tabla de respaldo + ALTER antes del DROP.</div>
+        </div>
+
+        <div class="finding finding--high">
+          <div class="finding__head">
+            <span class="finding__title">ORA-005 · UPDATE sin WHERE</span>
+            <span class="badge badge--high">ALTO</span>
+          </div>
+          <p style="margin:0.3rem 0;color:var(--text-dim);font-size:0.88rem;">UPDATE afectará todas las filas de la tabla.</p>
+          <div class="finding__match">match: <code>UPDATE employees SET salary = 0;</code></div>
+          <div class="finding__rec">💡 Añada WHERE con clave primaria o filtro de negocio.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 07 — STEP 3 DRY RUN ============ -->
+  <section class="slide" data-title="Paso 3 · DRY RUN">
+    <span class="slide__brand">Paso 3 · DRY RUN</span>
+    <span class="slide__num">07 / 13</span>
+    <p class="kicker">Paso 3 — DRY RUN con motor Oracle real</p>
+    <h2 class="section">El único simulador que ejecuta de verdad.</h2>
+    <p class="lede">Y luego hace ROLLBACK. Sin persistencia. Sin riesgo.</p>
+
+    <div class="grid-4" style="margin-top: 1.5rem;">
+      <div class="ve-card" style="text-align:center;border-top:3px solid var(--accent);">
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);letter-spacing:0.15em;">01</div>
+        <div style="font-weight:600;font-size:1.05rem;margin:0.4rem 0;">SAVEPOINT</div>
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim);">dryrun_sp;</div>
+      </div>
+      <div class="ve-card" style="text-align:center;border-top:3px solid var(--accent);">
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);letter-spacing:0.15em;">02</div>
+        <div style="font-weight:600;font-size:1.05rem;margin:0.4rem 0;">EXPLAIN PLAN</div>
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim);">dbms_xplan.display</div>
+      </div>
+      <div class="ve-card" style="text-align:center;border-top:3px solid var(--accent);">
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--accent);letter-spacing:0.15em;">03</div>
+        <div style="font-weight:600;font-size:1.05rem;margin:0.4rem 0;">Ejecutar SQL</div>
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim);">por statement</div>
+      </div>
+      <div class="ve-card" style="text-align:center;border-top:3px solid var(--red);">
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--red);letter-spacing:0.15em;">04</div>
+        <div style="font-weight:600;font-size:1.05rem;margin:0.4rem 0;">ROLLBACK</div>
+        <div style="font-family:var(--font-mono);font-size:0.78rem;color:var(--text-dim);">a dryrun_sp</div>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top: 1.8rem;">
+      <div class="console">
+<span class="l-info">[TX]</span>   SAVEPOINT dryrun_sp;
+<span class="l-plan">[PLAN]</span> EXPLAIN PLAN — ACCESS FULL EMPLOYEES  cost=4
+<span class="l-ok">[OK]</span>   UPDATE employees ... 214 filas afectadas
+<span class="l-ok">[OK]</span>   INSERT INTO audit_log ... 1 fila
+<span class="l-err">[KO]</span>   ORA-00942: la tabla o vista no existe — saltando
+<span class="l-warn">[TX]</span>   ROLLBACK TO SAVEPOINT dryrun_sp;
+<span class="l-ok">[OK]</span>   Cambios revertidos — BD intacta ✓
+      </div>
+      <div class="ve-card">
+        <div class="ve-card__label">Garantías del motor</div>
+        <ul style="margin:0;padding-left:1.1rem;color:var(--text-dim);line-height:2;">
+          <li><strong style="color:var(--text);">Cero persistencia</strong> en BD</li>
+          <li><strong style="color:var(--text);">Errores por statement</strong> — no frena el lote</li>
+          <li><strong style="color:var(--text);">Plan de ejecución real</strong> de Oracle</li>
+          <li><strong style="color:var(--text);">Logs auditables</strong> de cada paso</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 08 — STEP 4 REPORT ============ -->
+  <section class="slide" data-title="Paso 4 · Reporte">
+    <span class="slide__brand">Paso 4 · Reporte</span>
+    <span class="slide__num">08 / 13</span>
+    <p class="kicker">Paso 4 — Reporte con puntaje 0–100</p>
+    <h2 class="section">Un único número para decidir.</h2>
+    <p class="lede">¿Puedo aplicar este cambio en producción? El score lo responde en un vistazo.</p>
+
+    <div class="split">
+      <div class="score-wrap" style="padding-top:1rem;">
+        <div class="score-circle">
+          <div class="score-circle__num">87<small>/100</small></div>
+        </div>
+        <div class="score-verdict">APROBADO</div>
+        <div class="ve-card" style="width: 100%; text-align: center; padding: 0.9rem;">
+          <div class="ve-card__label" style="justify-content:center;">Fórmula</div>
+          <code style="font-family:var(--font-mono);color:var(--text);font-size:0.95rem;font-weight:500;">100 − 25·CRÍT − 10·ALTO − 3·MED</code>
+        </div>
+      </div>
+
+      <div class="mockup">
+        <div class="mockup__bar">
+          <span style="color:var(--accent);">📄</span>
+          <span class="mockup__url">Reporte_Datafix_20260424.html</span>
+        </div>
+        <div class="mockup__body" style="background:var(--surface);">
+          <h3 style="margin:0 0 1rem;font-family:var(--font-serif);font-size:1.2rem;">Datafix Oracle Automático — Pre-Chequeo</h3>
+          <table style="font-size:0.88rem;">
+            <tbody>
+              <tr><td><strong>Script</strong></td><td class="mono">payroll_fix_2026.sql</td></tr>
+              <tr><td><strong>Usuario</strong></td><td class="mono">diego.dev</td></tr>
+              <tr><td><strong>Entorno</strong></td><td class="mono">DEV</td></tr>
+              <tr><td><strong>Checksum</strong></td><td class="mono">a91f4c02</td></tr>
+              <tr><td><strong>Sintaxis</strong></td><td><span style="color:var(--green);">✓ OK</span></td></tr>
+              <tr><td><strong>Hallazgos</strong></td><td>1 CRÍTICO · 2 ALTO · 0 MEDIO</td></tr>
+              <tr><td><strong>DRY RUN</strong></td><td><span style="color:var(--green);">✓ ROLLBACK exitoso</span></td></tr>
+              <tr><td><strong>Veredicto</strong></td><td><strong style="color:var(--accent);">APROBADO CON OBSERVACIONES</strong></td></tr>
+            </tbody>
+          </table>
+          <div style="text-align:right;margin-top:1rem;">
+            <button style="background:var(--accent);color:#0B1320;border:none;padding:0.5rem 1rem;border-radius:3px;font-family:var(--font-mono);font-size:0.85rem;font-weight:600;cursor:pointer;">⬇ Descargar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 09 — SECURITY ============ -->
+  <section class="slide" data-title="Seguridad RBAC + AD">
+    <span class="slide__brand">Seguridad</span>
+    <span class="slide__num">09 / 13</span>
+    <p class="kicker">Control de acceso</p>
+    <h2 class="section">RBAC granular + Active Directory.</h2>
+    <p class="lede">Cada clic queda auditado. Cada permiso es revocable.</p>
+
+    <div class="split">
+      <div>
+        <div class="ve-card__label" style="margin-bottom:0.8rem;">Roles predefinidos</div>
+        <div class="role-list">
+          <div class="role-row"><div class="role-row__name">Administrador</div><div class="role-row__perms">15 permisos · control total</div></div>
+          <div class="role-row"><div class="role-row__name">Auditor</div><div class="role-row__perms">Visualiza reglas, bitácora y reportes</div></div>
+          <div class="role-row"><div class="role-row__name">Desarrollador</div><div class="role-row__perms">Valida y simula; sin cambios de reglas</div></div>
+          <div class="role-row"><div class="role-row__name">DBA</div><div class="role-row__perms">Simula y aprueba en todos los entornos</div></div>
+          <div class="role-row"><div class="role-row__name">Solo lectura</div><div class="role-row__perms">Acceso a dashboards y scripts</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ve-card__label" style="margin-bottom:0.8rem;">Integración Active Directory</div>
+        <table>
+          <thead>
+            <tr><th>Grupo AD</th><th>Rol mapeado</th><th>Origen</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">CN=DBA_TEAM</td><td><strong>DBA</strong></td><td><span class="badge badge--medium">AD</span></td></tr>
+            <tr><td class="mono">CN=DEV_BACKEND</td><td><strong>Desarrollador</strong></td><td><span class="badge badge--medium">AD</span></td></tr>
+            <tr><td class="mono">CN=SEC_AUDIT</td><td><strong>Auditor</strong></td><td><span class="badge badge--medium">AD</span></td></tr>
+            <tr><td class="mono">CN=APP_READONLY</td><td><strong>Solo lectura</strong></td><td><span class="badge badge--medium">AD</span></td></tr>
+            <tr><td class="mono">admin</td><td><strong>Administrador</strong></td><td><span class="badge badge--ok">LOCAL</span></td></tr>
+          </tbody>
+        </table>
+        <div class="ve-card" style="background:var(--green-dim);border:1px solid var(--green);margin-top:1rem;padding:0.8rem 1rem;">
+          <span style="color:var(--green);font-weight:600;font-size:0.9rem;">✓ Sincronización automática · Revocación instantánea al salir del grupo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 10 — ARCHITECTURE ============ -->
+  <section class="slide" data-title="Arquitectura">
+    <span class="slide__brand">Arquitectura</span>
+    <span class="slide__num">10 / 13</span>
+    <p class="kicker">Stack técnico</p>
+    <h2 class="section">Simple, desplegable en 5 minutos.</h2>
+    <p class="lede">Tres servicios, un comando. Sin dependencias externas más allá de Docker.</p>
+
+    <div class="arch-grid" style="margin-top:1.5rem;">
+      <div class="arch-box">
+        <div class="arch-box__head"><span class="dot"></span><span class="name">Frontend</span></div>
+        <div class="arch-box__tech">HTML5 · Tailwind · Vanilla JS</div>
+        <ul>
+          <li>Editor SQL con sintaxis</li>
+          <li>Dashboard de auditoría</li>
+          <li>Reportes descargables</li>
+          <li>Zero-install para el usuario</li>
+        </ul>
+      </div>
+      <div class="arch-glue">⇄</div>
+      <div class="arch-box">
+        <div class="arch-box__head"><span class="dot" style="background:var(--blue);"></span><span class="name">Backend API</span></div>
+        <div class="arch-box__tech">Python · FastAPI · oracledb</div>
+        <ul>
+          <li><code>/api/test-connection</code></li>
+          <li><code>/api/dryrun</code> (SAVEPOINT)</li>
+          <li><code>/api/audit + /api/report</code></li>
+          <li>Swagger autogenerado</li>
+        </ul>
+      </div>
+      <div class="arch-glue">⇄</div>
+      <div class="arch-box">
+        <div class="arch-box__head"><span class="dot" style="background:var(--teal);"></span><span class="name">Motor Oracle XE</span></div>
+        <div class="arch-box__tech">Oracle 21c · contenedor oficial</div>
+        <ul>
+          <li>PDB <code>XEPDB1</code> aislado</li>
+          <li>EXPLAIN PLAN real</li>
+          <li>Sin persistencia en BD</li>
+          <li>Resetea al reiniciar</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ve-card ve-card--hero" style="margin-top:2rem;display:flex;align-items:center;justify-content:space-between;gap:2rem;padding:1.4rem 2rem;">
+      <code style="font-family:var(--font-mono);font-size:1.3rem;color:var(--accent);font-weight:600;">$ docker compose up -d</code>
+      <span style="color:var(--text-dim);font-style:italic;">Todo el stack en un único comando.</span>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 11 — ROI ============ -->
+  <section class="slide" data-title="Beneficios / ROI">
+    <span class="slide__brand">Valor</span>
+    <span class="slide__num">11 / 13</span>
+    <p class="kicker">Valor</p>
+    <h2 class="section">Beneficios medibles desde el primer script.</h2>
+
+    <div class="roi-grid" style="margin-top:2rem;">
+      <div class="roi-card">
+        <div class="roi-stat" style="color:var(--accent);">−95%</div>
+        <div class="roi-cap">tiempo de revisión de scripts</div>
+        <div class="roi-sub">de horas a minutos</div>
+      </div>
+      <div class="roi-card">
+        <div class="roi-stat" style="color:var(--green);">0</div>
+        <div class="roi-cap">cambios rotos que llegan a prod</div>
+        <div class="roi-sub">bloqueo automático</div>
+      </div>
+      <div class="roi-card">
+        <div class="roi-stat" style="color:var(--blue);">100%</div>
+        <div class="roi-cap">trazabilidad del cambio</div>
+        <div class="roi-sub">quién · cuándo · qué</div>
+      </div>
+      <div class="roi-card">
+        <div class="roi-stat" style="color:var(--teal);">+60%</div>
+        <div class="roi-cap">capacidad del equipo DBA</div>
+        <div class="roi-sub">menos firefighting</div>
+      </div>
+    </div>
+
+    <div class="compare" style="margin-top:1.5rem;">
+      <div class="compare__col compare__col--before">
+        <div class="compare__lbl">Antes</div>
+        <p style="margin:0;color:var(--text-dim);font-size:0.95rem;line-height:1.6;">
+          Revisión manual · 2 días por script · criterios dispares · sin posibilidad de rollback ni reporte.
+        </p>
+      </div>
+      <div class="compare__col compare__col--after">
+        <div class="compare__lbl">Después</div>
+        <p style="margin:0;color:var(--text);font-size:0.95rem;line-height:1.6;">
+          Pre-chequeo automático · 2 minutos · 10 reglas · ROLLBACK garantizado · reporte 0–100.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 12 — ROADMAP ============ -->
+  <section class="slide" data-title="Roadmap">
+    <span class="slide__brand">Roadmap</span>
+    <span class="slide__num">12 / 13</span>
+    <p class="kicker">Roadmap</p>
+    <h2 class="section">Hacia dónde va Datafix.</h2>
+    <p class="lede">El MVP ya está en producción interna. Las siguientes olas amplían integración, motores y asistencia inteligente.</p>
+
+    <div class="timeline">
+      <div class="tl-item tl-item--done">
+        <div class="tl-item__dot">✓</div>
+        <div class="tl-item__date">Hoy · MVP</div>
+        <div class="tl-item__title">Plataforma Oracle</div>
+        <div class="tl-item__desc">Validación · Auditoría · DRY RUN · Reporte 0–100</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-item__dot">2</div>
+        <div class="tl-item__date">Q3 2026</div>
+        <div class="tl-item__title">CI/CD Integrado</div>
+        <div class="tl-item__desc">Git hooks · pipelines · Jira / ServiceNow</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-item__dot">3</div>
+        <div class="tl-item__date">Q4 2026</div>
+        <div class="tl-item__title">Multi-motor</div>
+        <div class="tl-item__desc">Postgres · SQL Server · MySQL · Snowflake</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-item__dot">4</div>
+        <div class="tl-item__date">Q1 2027</div>
+        <div class="tl-item__title">IA asistida</div>
+        <div class="tl-item__desc">Sugerencias de fix · Reglas autoaprendidas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 13 — CTA ============ -->
+  <section class="slide slide--cta" data-title="Próximos pasos">
+    <span class="slide__brand">Próximos pasos</span>
+    <span class="slide__num">13 / 13</span>
+    <p class="kicker">Próximos pasos</p>
+    <h2 class="section" style="font-size:clamp(2.5rem, 5.5vw, 4.5rem); max-width: 24ch;">
+      Déjanos pre-chequear<br>tus próximos cambios.
+    </h2>
+
+    <div class="cta-grid">
+      <div class="cta-card">
+        <div class="cta-card__num">1</div>
+        <h3>Demo guiada</h3>
+        <p>Una sesión de 30 minutos con tu equipo DBA.</p>
+      </div>
+      <div class="cta-card">
+        <div class="cta-card__num">2</div>
+        <h3>Piloto de 2 semanas</h3>
+        <p>Sobre tu ambiente de QA. Sin costo.</p>
+      </div>
+      <div class="cta-card">
+        <div class="cta-card__num">3</div>
+        <h3>Rollout productivo</h3>
+        <p>Despliegue, capacitación y soporte continuo.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:1.5rem;">
+      <code style="font-family:var(--font-mono);color:var(--text-dim);font-size:1rem;">chestier@gmail.com</code>
+      <span style="color:var(--text-muted);font-style:italic;font-size:0.92rem;">Datafix Oracle Automático · Pitch 2026</span>
+    </div>
+  </section>
+
+</div>
+
+<nav class="nav" id="nav"></nav>
+
+<script>
+  // Build dot navigation
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const nav = document.getElementById('nav');
+  const deck = document.getElementById('deck');
+
+  slides.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav__dot';
+    btn.title = s.dataset.title || `Slide ${i+1}`;
+    btn.setAttribute('aria-label', btn.title);
+    btn.addEventListener('click', () => s.scrollIntoView({ behavior: 'smooth' }));
+    nav.appendChild(btn);
+  });
+  const dots = Array.from(nav.children);
+
+  // Active dot tracking with IntersectionObserver
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = slides.indexOf(e.target);
+        dots.forEach(d => d.classList.remove('is-active'));
+        if (dots[i]) dots[i].classList.add('is-active');
+        e.target.classList.add('is-visible');
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => observer.observe(s));
+
+  // Keyboard navigation
+  let current = 0;
+  document.addEventListener('keydown', (e) => {
+    const idx = dots.findIndex(d => d.classList.contains('is-active'));
+    if (idx === -1) return;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      slides[Math.min(idx+1, slides.length-1)].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      slides[Math.max(idx-1, 0)].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      slides[0].scrollIntoView({ behavior: 'smooth' });
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      slides[slides.length-1].scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+</script>
+
+</body>
+</html>

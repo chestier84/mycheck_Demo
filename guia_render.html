@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía: Desplegar en Render</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .section h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        .section h3 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.1em;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 15px 0;
+            border-left: 4px solid #00ff00;
+            line-height: 1.6;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #0c5460;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #0c5460;
+            border-left: 4px solid #0c5460;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .platform-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            margin: 15px 0;
+        }
+        .platform-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .pros {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .cons {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .button-link {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin: 10px 5px 10px 0;
+            transition: all 0.3s;
+        }
+        .button-link:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Desplegar Datafix en Render</h1>
+
+        <!-- QUÉ ES RENDER -->
+        <div class="section">
+            <h2>¿Qué es Render?</h2>
+            <p style="line-height: 1.8; color: #333;">
+                <strong>Render</strong> es una plataforma de hosting en la nube moderna que permite desplegar aplicaciones sin necesidad de configurar servidores. Es similar a Heroku, Railway y AWS, pero con:
+            </p>
+            <ul>
+                <li><span class="pros">✅ Deploy automático desde GitHub</span></li>
+                <li><span class="pros">✅ Soporta docker-compose</span></li>
+                <li><span class="pros">✅ Base de datos PostgreSQL gratuita</span></li>
+                <li><span class="pros">✅ SSL/HTTPS automático</span></li>
+                <li><span class="pros">✅ Interfaz visual muy intuitiva</span></li>
+                <li><span class="cons">⚠️ No soporta Oracle directamente (usa PostgreSQL)</span></li>
+                <li><span class="cons">⚠️ Tier gratuito limitado</span></li>
+            </ul>
+        </div>
+
+        <!-- COMPARATIVA RENDER vs OTROS -->
+        <div class="section">
+            <h2>Comparativa: Render vs Otros</h2>
+            <table class="comparison-table">
+                <tr>
+                    <th>Plataforma</th>
+                    <th>Precio Inicial</th>
+                    <th>Docker-Compose</th>
+                    <th>BD Incluida</th>
+                    <th>Facilidad</th>
+                </tr>
+                <tr>
+                    <td><strong>Render</strong></td>
+                    <td>$7/mes (web)</td>
+                    <td>❌ No (manual)</td>
+                    <td>✅ PostgreSQL</td>
+                    <td>⭐⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td><strong>Railway</strong></td>
+                    <td>$5/mes</td>
+                    <td>✅ Sí</td>
+                    <td>✅ Varios</td>
+                    <td>⭐⭐⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td><strong>Heroku</strong></td>
+                    <td>$7/mes</td>
+                    <td>❌ No</td>
+                    <td>✅ PostgreSQL</td>
+                    <td>⭐⭐⭐</td>
+                </tr>
+                <tr>
+                    <td><strong>AWS</strong></td>
+                    <td>Variable ($20+)</td>
+                    <td>✅ ECS</td>
+                    <td>Pagado extra</td>
+                    <td>⭐⭐</td>
+                </tr>
+            </table>
+
+            <div class="info">
+                ℹ️ <strong>Para Datafix:</strong> Si quieres usar Oracle, mejor opción es Railway o AWS. Si puedes migrar a PostgreSQL, Render es excelente.
+            </div>
+        </div>
+
+        <!-- OPCIÓN 1: RENDER + POSTGRESQL (RECOMENDADO) -->
+        <div class="section">
+            <h2>✅ Opción 1: Render + PostgreSQL (Recomendado)</h2>
+            
+            <div class="success">
+                <strong>Por qué:</strong> Render es muy fácil, PostgreSQL es mucho más ligero que Oracle, y el costo es mínimo.
+            </div>
+
+            <h3>Paso 1: Preparar Repositorio GitHub</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Asegúrate de que tu repo esté en GitHub (public o private)</strong>
+                <div class="code-block">
+cd "C:\...\1 Datafix Oracle automatico"
+git init
+git add .
+git commit -m "Datafix ready for Render"
+git branch -M main
+git remote add origin https://github.com/TU_USUARIO/datafix-render.git
+git push -u origin main
+                </div>
+            </div>
+
+            <h3>Paso 2: Crear Cuenta en Render</h3>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Ve a render.com y crea cuenta con GitHub</strong>
+                <ul>
+                    <li>Haz clic en "Sign up"</li>
+                    <li>Selecciona "Sign up with GitHub"</li>
+                    <li>Autoriza Render a acceder a tus repos</li>
+                </ul>
+            </div>
+
+            <h3>Paso 3: Crear Base de Datos PostgreSQL (Gratis)</h3>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>En Render Dashboard → New + → PostgreSQL</strong>
+                <ul>
+                    <li>Name: <code>datafix-db</code></li>
+                    <li>Region: Selecciona más cercano</li>
+                    <li>PostgreSQL Version: 14</li>
+                    <li>Plan: Free (gratuito)</li>
+                    <li>Create Database</li>
+                </ul>
+                <p style="margin-top: 10px; color: #666;">
+                    ⏱️ Espera 2-3 minutos mientras se crea
+                </p>
+            </div>
+
+            <h3>Paso 4: Copiar Connection String</h3>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Una vez creada, copia la conexión</strong>
+                <p style="margin-top: 10px;">
+                    En la página de la BD → Info → External Database URL<br>
+                    Verá algo como: <code>postgresql://user:pass@host:5432/dbname</code>
+                </p>
+            </div>
+
+            <h3>Paso 5: Crear Web Service (Backend)</h3>
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>Render Dashboard → New + → Web Service</strong>
+                <ul>
+                    <li>Repository: Selecciona tu repo de GitHub</li>
+                    <li>Branch: main</li>
+                    <li>Runtime: Python 3</li>
+                    <li>Build Command: <code>pip install -r requirements.txt</code></li>
+                    <li>Start Command: <code>uvicorn main:app --host 0.0.0.0 --port 10000</code></li>
+                    <li>Plan: Free (gratuito) o Pay-as-you-go ($7/mes)</li>
+                    <li>Create Web Service</li>
+                </ul>
+            </div>
+
+            <h3>Paso 6: Agregar Variables de Entorno</h3>
+            <div class="step">
+                <span class="step-number">6</span>
+                <strong>Web Service → Environment → Add Environment Variable</strong>
+                <div class="code-block">
+DATABASE_URL=postgresql://user:pass@host:5432/dbname
+PYTHONUNBUFFERED=1
+                </div>
+                <p style="margin-top: 10px; color: #666;">
+                    Pega la conexión PostgreSQL que copiaste en el Paso 4
+                </p>
+            </div>
+
+            <div class="success">
+                ✅ Backend desplegado. URL pública generada automáticamente (p.ej. https://datafix-backend.onrender.com)
+            </div>
+
+            <h3>Paso 7: Crear Web Service (Frontend)</h3>
+            <div class="step">
+                <span class="step-number">7</span>
+                <strong>Render Dashboard → New + → Web Service</strong>
+                <ul>
+                    <li>Repository: Mismo repo</li>
+                    <li>Build Command: <code>echo "Frontend ready"</code></li>
+                    <li>Start Command: <code>nginx -g 'daemon off;'</code></li>
+                    <li>Plan: Free</li>
+                </ul>
+                <div class="warning">
+                    ⚠️ Para el frontend, necesitas un Dockerfile específico. Ver Paso 8.
+                </div>
+            </div>
+
+            <h3>Paso 8: Crear Dockerfile para Frontend (si no existe)</h3>
+            <div class="step">
+                <span class="step-number">8</span>
+                <strong>Crea archivo <code>frontend.Dockerfile</code> en la raíz</strong>
+                <div class="code-block">
+FROM nginx:alpine
+
+COPY datafix_oracle.html /usr/share/nginx/html/index.html
+COPY backend/nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+                </div>
+            </div>
+        </div>
+
+        <!-- OPCIÓN 2: RENDER + ORACLE (COMPLEJO) -->
+        <div class="section">
+            <h2>⚠️ Opción 2: Render + Oracle (Complejo)</h2>
+            
+            <div class="warning">
+                <strong>No Recomendado:</strong> Render no tiene soporte nativo para Oracle. Necesitarías:
+            </div>
+
+            <ul>
+                <li>Usar Oracle Cloud Database (pago, ~$20-50/mes)</li>
+                <li>O ejecutar Oracle en otra plataforma (AWS RDS, etc.)</li>
+                <li>O migrar a PostgreSQL (recomendado)</li>
+            </ul>
+
+            <div class="platform-card">
+                <h4>🔄 Migrar de Oracle a PostgreSQL</h4>
+                <p style="margin-bottom: 10px;">
+                    <strong>Ventajas:</strong>
+                </p>
+                <ul>
+                    <li>Gratis (PostgreSQL en Render es gratis)</li>
+                    <li>Más ligero (menos recursos)</li>
+                    <li>Mejor soporte en Render</li>
+                    <li>Código Python prácticamente sin cambios</li>
+                </ul>
+                <p style="margin-top: 15px; margin-bottom: 10px;">
+                    <strong>Cambios en requirements.txt:</strong>
+                </p>
+                <div class="code-block">
+# Cambiar:
+cx-Oracle==8.3.0
+
+# Por:
+psycopg2-binary==2.9.0
+                </div>
+            </div>
+        </div>
+
+        <!-- DEPLOY DESDE DOCKER HUB -->
+        <div class="section">
+            <h2>🐳 Opción 3: Render + Tus Imágenes de Docker Hub</h2>
+            
+            <div class="info">
+                ℹ️ Render puede desplegar imágenes Docker directamente desde Docker Hub
+            </div>
+
+            <h3>Paso 1: Render Dashboard → New + → Web Service</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Deploy with image URL</strong>
+                <ul>
+                    <li>Image URL: <code>chestier84/datafix-backend:latest</code></li>
+                    <li>Port: 8000</li>
+                    <li>Create Web Service</li>
+                </ul>
+            </div>
+
+            <h3>Paso 2: Agregar Variables de Entorno</h3>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Environment → Add Environment Variable</strong>
+                <div class="code-block">
+DATABASE_URL=postgresql://user:pass@host:5432/dbname
+ORACLE_HOST_OVERRIDE=oracle.tu-dominio.com
+ORACLE_PWD=OraclePwd1
+                </div>
+            </div>
+
+            <div class="success">
+                ✅ Listo. Render auto-descarga y ejecuta tu imagen cada vez que la actualizas en Docker Hub.
+            </div>
+        </div>
+
+        <!-- CHECKLIST FINAL -->
+        <div class="section">
+            <h2>✅ Checklist Pre-Deploy</h2>
+            <table class="comparison-table">
+                <tr>
+                    <th>Elemento</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>✓ Repo en GitHub (público o private)</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Cuenta en Render</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Base de datos PostgreSQL (o conexión Oracle)</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ requirements.txt actualizado</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Variables de entorno configuradas</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Dockerfile/nginx.conf en repo</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Conexión BD funciona en test</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- COMPARATIVA FINAL -->
+        <div class="section">
+            <h2>📊 Recomendación Final para Datafix</h2>
+            
+            <div class="platform-card" style="border-left: 5px solid #28a745;">
+                <h4>1️⃣ Mejor Opción: Railway (Sigue siendo la mejor)</h4>
+                <ul>
+                    <li><span class="pros">✅ Soporta docker-compose nativo</span></li>
+                    <li><span class="pros">✅ Conecta Oracle directamente</span></li>
+                    <li><span class="pros">✅ Deploy en 2 clicks desde GitHub</span></li>
+                    <li><span class="pros">✅ $5-20/mes</span></li>
+                </ul>
+            </div>
+
+            <div class="platform-card">
+                <h4>2️⃣ Segunda Opción: Render (Si migras a PostgreSQL)</h4>
+                <ul>
+                    <li><span class="pros">✅ Muy fácil de usar</span></li>
+                    <li><span class="pros">✅ PostgreSQL gratis</span></li>
+                    <li><span class="pros">✅ Interfaz visual intuitiva</span></li>
+                    <li><span class="cons">❌ Requiere cambios en BD</span></li>
+                </ul>
+            </div>
+
+            <div class="platform-card">
+                <h4>3️⃣ Tercera Opción: AWS (Más control, más caro)</h4>
+                <ul>
+                    <li><span class="pros">✅ Máxima escalabilidad</span></li>
+                    <li><span class="pros">✅ Mejor rendimiento</span></li>
+                    <li><span class="cons">❌ Más complejo ($50-200/mes)</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- LINKS ÚTILES -->
+        <div class="section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 style="color: white; border-color: rgba(255,255,255,0.3);">🔗 Links Útiles</h2>
+            <ul style="line-height: 2.5;">
+                <li>📖 <a href="https://render.com/docs" style="color: #fff; text-decoration: underline;">Documentación Render</a></li>
+                <li>🐙 <a href="https://github.com" style="color: #fff; text-decoration: underline;">GitHub (push de tu código)</a></li>
+                <li>🚂 <a href="https://railway.app" style="color: #fff; text-decoration: underline;">Railway (alternativa recomendada)</a></li>
+                <li>📚 <a href="https://www.postgresql.org/docs/" style="color: #fff; text-decoration: underline;">Documentación PostgreSQL</a></li>
+                <li>🐳 <a href="https://hub.docker.com/u/chestier84" style="color: #fff; text-decoration: underline;">Tus Imágenes en Docker Hub</a></li>
+            </ul>
+        </div>
+
+        <!-- SOPORTE -->
+        <div class="section" style="background: #d1ecf1; border-left: 5px solid #0c5460;">
+            <h2 style="border-color: #0c5460; color: #0c5460;">🆘 ¿Necesitas Ayuda?</h2>
+            <p style="color: #0c5460; line-height: 1.8;">
+                <strong>Próximos pasos:</strong>
+            </p>
+            <ol style="color: #0c5460; margin-left: 20px; line-height: 2;">
+                <li><strong>Opción A (Recomendado):</strong> Sube a Railway (más simple, funciona 100%)</li>
+                <li><strong>Opción B:</strong> Migra a PostgreSQL y usa Render</li>
+                <li><strong>Opción C:</strong> Usa AWS para máxima escalabilidad</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

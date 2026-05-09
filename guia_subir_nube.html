@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía: Subir Dockers a la Nube</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .section h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        .section h3 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        .step {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.1em;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+            font-size: 0.95em;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin: 15px 0;
+            border-left: 4px solid #00ff00;
+            line-height: 1.6;
+        }
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #28a745;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #0c5460;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #0c5460;
+            border-left: 4px solid #0c5460;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #667eea;
+            color: white;
+        }
+        tr:hover {
+            background: #f5f5f5;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .platform-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .platform-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .platform-card ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+        .pros {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .cons {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>☁️ Guía Completa: Subir Dockers a la Nube</h1>
+
+        <!-- COMPARATIVA DE PLATAFORMAS -->
+        <div class="section">
+            <h2>🌍 Plataformas Disponibles</h2>
+            
+            <div class="comparison">
+                <div class="platform-card">
+                    <h4>🚀 Railway (Recomendado para principiantes)</h4>
+                    <ul>
+                        <li><span class="pros">✅ Muy fácil</span></li>
+                        <li><span class="pros">✅ GitHub auto-deploy</span></li>
+                        <li><span class="pros">✅ $5/mes inicial</span></li>
+                        <li><span class="cons">❌ Menos control</span></li>
+                        <li><span class="cons">❌ Límites menores</span></li>
+                    </ul>
+                </div>
+
+                <div class="platform-card">
+                    <h4>🔵 AWS (Profesional)</h4>
+                    <ul>
+                        <li><span class="pros">✅ Muy escalable</span></li>
+                        <li><span class="pros">✅ Máximo control</span></li>
+                        <li><span class="pros">✅ Tier gratuito 12 meses</span></li>
+                        <li><span class="cons">❌ Complejidad moderada</span></li>
+                        <li><span class="cons">❌ Costo variable</span></li>
+                    </ul>
+                </div>
+
+                <div class="platform-card">
+                    <h4>🌐 Google Cloud Run</h4>
+                    <ul>
+                        <li><span class="pros">✅ Serverless automático</span></li>
+                        <li><span class="pros">✅ Pay-per-use</span></li>
+                        <li><span class="pros">✅ Gratuito hasta cierto uso</span></li>
+                        <li><span class="cons">❌ Ideal solo para APIs</span></li>
+                        <li><span class="cons">❌ No para bases datos persistentes</span></li>
+                    </ul>
+                </div>
+
+                <div class="platform-card">
+                    <h4>☁️ Azure Container Instances</h4>
+                    <ul>
+                        <li><span class="pros">✅ Fácil de usar</span></li>
+                        <li><span class="pros">✅ Buen soporte</span></li>
+                        <li><span class="pros">✅ Créditos gratuitos</span></li>
+                        <li><span class="cons">❌ Menos documentación</span></li>
+                        <li><span class="cons">❌ Comunidad pequeña</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- OPCIÓN 1: RAILWAY (MÁS FÁCIL) -->
+        <div class="section">
+            <h2>1️⃣ Railway (Lo Más Fácil - Recomendado)</h2>
+            
+            <div class="success">
+                ✅ <strong>Recomendado para Datafix:</strong> Railway es ideal para tu proyecto porque maneja docker-compose automáticamente.
+            </div>
+
+            <h3>Paso 1: Preparar Repositorio GitHub</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Crea un repositorio en GitHub</strong>
+                <div class="code-block">
+git init
+git add .
+git commit -m "Datafix Oracle - Ready for Cloud"
+git branch -M main
+git remote add origin https://github.com/TU_USUARIO/datafix-oracle.git
+git push -u origin main
+                </div>
+            </div>
+
+            <h3>Paso 2: Registrarse en Railway</h3>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Ve a railway.app y crea cuenta con GitHub</strong>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Haz clic en "Deploy Now"</li>
+                    <li>Selecciona tu repositorio</li>
+                    <li>Railway auto-detecta docker-compose.yml</li>
+                </ol>
+            </div>
+
+            <h3>Paso 3: Configurar Variables de Entorno</h3>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>En Railway Dashboard → Add Environment Variables</strong>
+                <div class="code-block">
+ORACLE_PWD=OraclePwd1
+PYTHONUNBUFFERED=1
+                </div>
+            </div>
+
+            <h3>Paso 4: Deploy Automático</h3>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Railway despliega automáticamente</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Cada push a GitHub → Auto-deploy</li>
+                    <li>URLs públicas generadas automáticamente</li>
+                    <li>Los logs están disponibles en el dashboard</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                ✅ <strong>Ventaja:</strong> Todo automático, perfecto para MVP y desarrollo.
+            </div>
+        </div>
+
+        <!-- OPCIÓN 2: DOCKER HUB + AWS -->
+        <div class="section">
+            <h2>2️⃣ Docker Hub + AWS ECS (Profesional)</h2>
+
+            <h3>Paso 1: Subir Imágenes a Docker Hub</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Login en Docker Hub</strong>
+                <div class="code-block">
+docker login
+# Username: tu_usuario_dockerhub
+# Password: tu_token
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Etiquetar Imágenes</strong>
+                <div class="code-block">
+# Backend
+docker tag backend-backend:latest tu_usuario/datafix-backend:latest
+docker tag backend-backend:latest tu_usuario/datafix-backend:v1.0
+
+# Frontend
+docker tag nginx:alpine tu_usuario/datafix-frontend:latest
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Subir a Docker Hub</strong>
+                <div class="code-block">
+docker push tu_usuario/datafix-backend:latest
+docker push tu_usuario/datafix-backend:v1.0
+docker push tu_usuario/datafix-frontend:latest
+                </div>
+            </div>
+
+            <div class="info">
+                ℹ️ Ver imágenes: docker images
+            </div>
+
+            <h3>Paso 2: AWS ECS (Elastic Container Service)</h3>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>En AWS Console → ECS → Create Cluster</strong>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Cluster name: "datafix-cluster"</li>
+                    <li>Infrastructure: "AWS Fargate"</li>
+                    <li>Create Task Definition desde Docker Hub images</li>
+                    <li>Create Service</li>
+                    <li>Asignar Load Balancer (para alto tráfico)</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                ⚠️ <strong>Nota Oracle:</strong> AWS ECS no es ideal para bases datos con estado. Usa AWS RDS para Oracle o Docker en EC2.
+            </div>
+
+            <h3>Paso 3: RDS para Oracle (Base de Datos Gestiona)</h3>
+            <div class="step">
+                <span class="step-number">5</span>
+                <strong>AWS Console → RDS → Create Database</strong>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Engine: Oracle Database Express Edition</li>
+                    <li>DB Instance: db.t3.small (costo ~$20/mes)</li>
+                    <li>Storage: 20 GB</li>
+                    <li>Crear</li>
+                </ol>
+            </div>
+
+            <div class="success">
+                ✅ <strong>Ventaja:</strong> Escalable, profesional, backups automáticos.
+            </div>
+        </div>
+
+        <!-- OPCIÓN 3: GOOGLE CLOUD RUN -->
+        <div class="section">
+            <h2>3️⃣ Google Cloud Run (Serverless)</h2>
+
+            <h3>Paso 1: Preparar Dockerfile</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Asegúrate de que tu Dockerfile escucha en puerto 8080</strong>
+                <div class="code-block">
+EXPOSE 8080
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+                </div>
+            </div>
+
+            <h3>Paso 2: Build y Push a Google Artifact Registry</h3>
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Desde tu PC</strong>
+                <div class="code-block">
+gcloud auth configure-docker
+docker build -t gcr.io/TU_PROJECT_ID/datafix-backend:latest .
+docker push gcr.io/TU_PROJECT_ID/datafix-backend:latest
+                </div>
+            </div>
+
+            <h3>Paso 3: Deploy en Cloud Run</h3>
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>Google Cloud Console → Cloud Run → Create Service</strong>
+                <ol style="margin-left: 20px; margin-top: 10px;">
+                    <li>Container image: tu imagen de Artifact Registry</li>
+                    <li>Allow unauthenticated invocations: SÍ (para API pública)</li>
+                    <li>Create</li>
+                    <li>Google genera URL pública automáticamente</li>
+                </ol>
+            </div>
+
+            <div class="warning">
+                ⚠️ <strong>Limitación:</strong> Cloud Run es stateless. No guarda datos entre reinicios. Para base de datos, usa Cloud SQL.
+            </div>
+
+            <h3>Paso 4: Cloud SQL para Oracle</h3>
+            <div class="step">
+                <span class="step-number">4</span>
+                <strong>Google Cloud Console → Cloud SQL → Create Instance</strong>
+                <div class="warning">
+                    ⚠️ Google Cloud NO soporta Oracle en Cloud SQL. Solo MySQL, PostgreSQL, SQL Server.
+                    <br><strong>Alternativa:</strong> Usa PostgreSQL (más barato, $10-30/mes) o Oracle en Compute Engine.
+                </div>
+            </div>
+
+            <div class="success">
+                ✅ <strong>Ventaja:</strong> Gratuito hasta cierto uso, muy económico para startups.
+            </div>
+        </div>
+
+        <!-- RECOMENDACIÓN PARA DATAFIX -->
+        <div class="section">
+            <h2>📌 Recomendación para tu Proyecto Datafix</h2>
+
+            <h3>Escenario 1: MVP Rápido (Semanas 1-2)</h3>
+            <div class="platform-card" style="border-left: 5px solid #28a745;">
+                <h4>🚀 Railway</h4>
+                <p>
+                    <strong>Por qué:</strong> 
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Soporta docker-compose nativo</li>
+                        <li>Incluye PostgreSQL/MySQL gratuito</li>
+                        <li>Deploy en 5 minutos</li>
+                        <li>$5-20/mes inicial</li>
+                    </ul>
+                </p>
+                <p style="margin-top: 15px;">
+                    <strong>Instrucciones:</strong>
+                    <div class="code-block" style="margin-top: 10px;">
+1. Crear repo GitHub
+2. railway.app → Login con GitHub
+3. Deploy → Auto-detect docker-compose.yml
+4. Listo en 3 min
+                    </div>
+                </p>
+            </div>
+
+            <h3 style="margin-top: 30px;">Escenario 2: Producción Escalable (Meses 2+)</h3>
+            <div class="platform-card" style="border-left: 5px solid #0c5460;">
+                <h4>🔵 AWS</h4>
+                <p>
+                    <strong>Arquitectura Recomendada:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>ECS Fargate → Backend + Frontend</li>
+                        <li>RDS Oracle → Base de datos gestiona</li>
+                        <li>CloudFront → CDN para static files</li>
+                        <li>CloudWatch → Logs y monitoreo</li>
+                    </ul>
+                </p>
+                <p style="margin-top: 15px;">
+                    <strong>Costo Estimado:</strong> $50-150/mes
+                </p>
+            </div>
+        </div>
+
+        <!-- CHECKLIST -->
+        <div class="section">
+            <h2>✅ Checklist Antes de Deploy</h2>
+            <table>
+                <tr>
+                    <th>Elemento</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>✓ docker-compose.yml optimizado</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ .dockerignore creado</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Dockerfile multi-stage (producción)</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Variables de entorno en .env (no hardcoded)</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Repo en GitHub</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Healthchecks configurados</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Logs configurados</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+                <tr>
+                    <td>✓ Contraseñas en Secrets (no en código)</td>
+                    <td style="text-align: center;">[ ]</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- COMANDOS RÁPIDOS -->
+        <div class="section">
+            <h2>⚡ Comandos Rápidos de Referencia</h2>
+
+            <h3>Localmente (antes de subir)</h3>
+            <div class="code-block">
+# Verificar que todo funciona
+docker-compose up -d
+docker ps
+docker logs datafix-backend
+docker exec datafix-backend bash -c "curl http://localhost:8000/api/health"
+
+# Build de producción
+docker build -t datafix-backend:prod .
+docker tag datafix-backend:prod tu_usuario/datafix-backend:prod
+            </div>
+
+            <h3>En la Nube (después de deploy)</h3>
+            <div class="code-block">
+# Ver logs remotos (Railway)
+railway logs
+
+# Ver logs (AWS)
+aws logs tail /ecs/datafix-backend --follow
+
+# Ver logs (Google Cloud)
+gcloud run logs read datafix-backend --limit 50
+            </div>
+        </div>
+
+        <!-- SOPORTE -->
+        <div class="section" style="background: #d1ecf1; border-left: 5px solid #0c5460;">
+            <h2>🆘 Próximos Pasos</h2>
+            <ol style="margin-left: 20px; line-height: 2; color: #0c5460;">
+                <li><strong>Hoy:</strong> Sube a GitHub tu proyecto</li>
+                <li><strong>Mañana:</strong> Crea cuenta en Railway o AWS</li>
+                <li><strong>Esta semana:</strong> Deploy en Railway (MVP)</li>
+                <li><strong>Próximo mes:</strong> Migra a AWS si necesitas escala</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>
